@@ -246,6 +246,12 @@
         "name": "adapalene",
         "frequency": "2week",
         "createdAt": "2026-06-01T13:31:49.930Z"
+      },
+      {
+        "id": "10cz74k8zpff",
+        "name": "clean",
+        "frequency": "daily",
+        "createdAt": "2026-06-01T13:32:02.811Z"
       }
     ]
   },
