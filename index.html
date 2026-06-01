@@ -1224,6 +1224,7 @@ h1 {
   <div class="tabs">
     <button class="tab active" data-view="week">Semaine</button>
     <button class="tab" data-view="month">Mois</button>
+    <button class="tab" data-view="skin">Skin</button>
     <button class="tab" data-view="manage">Mes listes <span class="badge" id="badge-total">0</span></button>
     <button class="tab" data-view="shopping">Shopping</button>
     <button class="tab" data-view="settings">Sync</button>
@@ -1253,12 +1254,18 @@ const DEFAULT_STATE = {
   planTemplates: [],  // [{id, name, color}] — activités fréquentes pour le planning
   hiddenCategories: [], // [string] — catégories de routines masquées en vue Semaine/Mois
   shopping: {
-    courses: [],      // [{id, type:"item"|"divider", text, done}]
+    courses: [],
     rightLists: [
       { id: "rl1", title: "Maison", items: [] },
       { id: "rl2", title: "Art / loisirs", items: [] }
     ]
-  }
+  },
+  skincare: {
+    am:   [],  // [{id, name, frequency, createdAt}]
+    pm:   [],
+    body: []
+  },
+  skinCompletions: {} // {activityId: {"2026-06-01": true, ...}}
 };
 
 const TEMPLATE_COLORS = [
@@ -1306,6 +1313,14 @@ function loadState() {
       if (!Array.isArray(merged.shopping.rightLists)) merged.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
     }
     if (!Array.isArray(merged.hiddenCategories)) merged.hiddenCategories = [];
+    if (!merged.skincare || typeof merged.skincare !== "object") {
+      merged.skincare = JSON.parse(JSON.stringify(DEFAULT_STATE.skincare));
+    } else {
+      if (!Array.isArray(merged.skincare.am)) merged.skincare.am = [];
+      if (!Array.isArray(merged.skincare.pm)) merged.skincare.pm = [];
+      if (!Array.isArray(merged.skincare.body)) merged.skincare.body = [];
+    }
+    if (!merged.skinCompletions || typeof merged.skinCompletions !== "object") merged.skinCompletions = {};
     return merged;
   } catch (e) {
     console.error(e);
@@ -2117,11 +2132,8 @@ function addDayModalItem() {
   if (!state.weeklyPlan[window._currentDayKey]) state.weeklyPlan[window._currentDayKey] = [];
   state.weeklyPlan[window._currentDayKey].push({ id: uid(), text: v, done: false });
   saveState();
-  renderDayModal();
-  // Also refresh background
-  const c = document.getElementById("content");
-  if (view === "month") c.innerHTML = renderMonth();
-  else if (view === "week") c.innerHTML = renderWeek();
+  closeModal();
+  render();
 }
 function togglePlanItemModal(itemId) {
   const list = state.weeklyPlan && state.weeklyPlan[window._currentDayKey];
@@ -2151,10 +2163,8 @@ function addTemplateToCurrentDay(templateId) {
   if (!state.weeklyPlan[window._currentDayKey]) state.weeklyPlan[window._currentDayKey] = [];
   state.weeklyPlan[window._currentDayKey].push({ id: uid(), text: t.name, done: false, color: t.color || null });
   saveState();
-  renderDayModal();
-  const c = document.getElementById("content");
-  if (view === "month") c.innerHTML = renderMonth();
-  else if (view === "week") c.innerHTML = renderWeek();
+  closeModal();
+  render();
 }
 
 // ============== CATEGORIES (groupage routines) ==============
@@ -2188,6 +2198,207 @@ function groupRoutinesByCategory(routines) {
     groups[seen.get(cat)].items.push(r);
   });
   return groups;
+}
+
+// ============== SKINCARE ==============
+const SKIN_SECTIONS = [
+  { id: "am",   label: "Matin (AM)",     icon: "☀" },
+  { id: "pm",   label: "Soir (PM)",      icon: "🌙" },
+  { id: "body", label: "Corps / Dos",    icon: "✷" }
+];
+
+function ensureSkincare() {
+  if (!state.skincare || typeof state.skincare !== "object") {
+    state.skincare = JSON.parse(JSON.stringify(DEFAULT_STATE.skincare));
+  }
+  SKIN_SECTIONS.forEach(s => {
+    if (!Array.isArray(state.skincare[s.id])) state.skincare[s.id] = [];
+  });
+  if (!state.skinCompletions || typeof state.skinCompletions !== "object") state.skinCompletions = {};
+}
+
+function addSkinRoutine(sectionId) {
+  ensureSkincare();
+  window._currentSkinSection = sectionId;
+  openModal(`
+    <h3>Nouveau soin — ${escapeHtml(SKIN_SECTIONS.find(s => s.id === sectionId).label)}</h3>
+    <input type="text" id="skin-name" placeholder="Nom du soin (ex: Différine, Crème hydratante)" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <label style="font-size:12px;color:#475569;font-weight:500">Fréquence cible</label>
+    <select id="skin-freq" style="width:100%;padding:9px;margin:4px 0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+      ${FREQUENCIES.map(f => `<option value="${f.id}">${f.label}</option>`).join("")}
+    </select>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveNewSkinRoutine()">Ajouter</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+  `);
+  setTimeout(() => document.getElementById("skin-name").focus(), 50);
+}
+
+function saveNewSkinRoutine() {
+  const name = document.getElementById("skin-name").value.trim();
+  if (!name) { alert("Donne un nom au soin"); return; }
+  const freq = document.getElementById("skin-freq").value;
+  const section = window._currentSkinSection;
+  ensureSkincare();
+  state.skincare[section].push({
+    id: uid(),
+    name,
+    frequency: freq,
+    createdAt: new Date().toISOString()
+  });
+  saveState();
+  closeModal();
+  render();
+}
+
+function editSkinRoutine(sectionId, id) {
+  ensureSkincare();
+  const r = state.skincare[sectionId].find(x => x.id === id);
+  if (!r) return;
+  window._editSkinSection = sectionId;
+  window._editSkinId = id;
+  openModal(`
+    <h3>Modifier le soin</h3>
+    <input type="text" id="es-name" value="${escapeAttr(r.name)}" placeholder="Nom" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <label style="font-size:12px;color:#475569;font-weight:500">Fréquence</label>
+    <select id="es-freq" style="width:100%;padding:9px;margin:4px 0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+      ${FREQUENCIES.map(f => `<option value="${f.id}" ${f.id === r.frequency ? "selected" : ""}>${f.label}</option>`).join("")}
+    </select>
+    <div style="display:flex;gap:8px;justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveSkinEdit()">Enregistrer</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      </div>
+      <button class="btn btn-danger" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer" onclick="deleteSkinFromModal()">Supprimer</button>
+    </div>
+  `);
+}
+function saveSkinEdit() {
+  const section = window._editSkinSection;
+  const id = window._editSkinId;
+  const r = state.skincare[section].find(x => x.id === id);
+  if (!r) return;
+  const name = document.getElementById("es-name").value.trim();
+  if (!name) { alert("Donne un nom"); return; }
+  r.name = name;
+  r.frequency = document.getElementById("es-freq").value;
+  saveState();
+  closeModal();
+  render();
+}
+function deleteSkinFromModal() {
+  const section = window._editSkinSection;
+  const id = window._editSkinId;
+  if (!confirm("Supprimer ce soin ? Toute la progression sera perdue.")) return;
+  state.skincare[section] = state.skincare[section].filter(x => x.id !== id);
+  delete state.skinCompletions[id];
+  saveState();
+  closeModal();
+  render();
+}
+
+function toggleSkinDay(id, dateKey) {
+  if (dateKey > todayKey()) return;
+  if (!state.skinCompletions[id]) state.skinCompletions[id] = {};
+  if (state.skinCompletions[id][dateKey]) {
+    delete state.skinCompletions[id][dateKey];
+  } else {
+    state.skinCompletions[id][dateKey] = true;
+  }
+  saveState();
+  render();
+}
+
+function renderSkin() {
+  ensureSkincare();
+  const days = getWeekDays(weekOffset);
+  const today = todayKey();
+
+  let html = `
+    <div class="grid-nav" style="padding:0 4px;margin-bottom:12px">
+      <button onclick="weekOffset--; render();">← Précédente</button>
+      <div class="grid-nav-title">
+        Semaine du ${weekRangeLabel(weekOffset)}${weekOffset === 0 ? " (en cours)" : ""}
+        ${weekOffset !== 0 ? `<button class="section-plus" style="font-size:12px;margin-left:8px" onclick="weekOffset=0; render();" title="Revenir à cette semaine">↺ aujourd'hui</button>` : ""}
+      </div>
+      <button onclick="weekOffset++; render();">Suivante →</button>
+    </div>
+  `;
+
+  SKIN_SECTIONS.forEach(section => {
+    const routines = state.skincare[section.id] || [];
+    // Sort perfect to bottom
+    const sorted = routines.slice().sort((a, b) => {
+      const fa = getFrequency(a.frequency).target;
+      const fb = getFrequency(b.frequency).target;
+      const ca = state.skinCompletions[a.id] || {};
+      const cb = state.skinCompletions[b.id] || {};
+      const da = days.filter(d => ca[d.key]).length;
+      const db = days.filter(d => cb[d.key]).length;
+      const pa = da >= fa ? 1 : 0;
+      const pb = db >= fb ? 1 : 0;
+      return pa - pb;
+    });
+    html += `
+      <div class="grid-wrap" style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 4px 10px">
+          <div style="font-size:14px;font-weight:600;color:#0f172a">
+            ${section.icon} ${escapeHtml(section.label)}
+            <span style="color:#94a3b8;font-weight:400;font-size:12px">(${routines.length})</span>
+          </div>
+          <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px" onclick="addSkinRoutine('${section.id}')">+ Soin</button>
+        </div>
+    `;
+    if (routines.length === 0) {
+      html += `<div class="empty" style="padding:10px;color:#cbd5e1">Pas encore de soin. Clique sur + Soin pour ajouter.</div>`;
+    } else {
+      html += `
+        <table class="grid-table">
+          <thead>
+            <tr>
+              <th class="task-col">Soin</th>
+              ${days.map(d => `<th class="${d.isToday ? "day-today" : ""}${d.isWeekend ? " weekend" : ""}">${d.label}<br><span class="month-day-num">${d.num}</span></th>`).join("")}
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      sorted.forEach(r => {
+        const completions = state.skinCompletions[r.id] || {};
+        let doneInWeek = 0;
+        const target = getFrequency(r.frequency).target;
+        days.forEach(d => { if (completions[d.key]) doneInWeek++; });
+        const perfect = doneInWeek >= target;
+        html += `<tr class="${perfect ? "row-perfect" : ""}">
+          <td class="task-cell">
+            ${escapeHtml(r.name)}
+            <button class="routine-edit-icon" onclick="editSkinRoutine('${section.id}','${r.id}')" title="Modifier">✎</button>
+          </td>`;
+        days.forEach(d => {
+          const done = !!completions[d.key];
+          const isFuture = d.key > today;
+          html += `<td class="${d.isToday ? "day-today" : ""}">
+            <div class="cell-box ${done ? "checked" : ""} ${isFuture ? "future" : ""}"
+                 onclick="${isFuture ? "" : `toggleSkinDay('${r.id}','${d.key}')`}"></div>
+          </td>`;
+        });
+        const targetLabel = getFrequency(r.frequency).period === "week" ? `/${target}` : "";
+        html += `<td><span class="tag tag-prog ${perfect ? "full" : ""}">${doneInWeek}${targetLabel}</span></td>`;
+        html += `</tr>`;
+      });
+      html += `</tbody></table>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `
+    <div style="font-size:12px;color:#64748b;line-height:1.6;margin:8px 0 16px;padding:0 4px">
+      Trois routines indépendantes : matin, soir et corps. Chaque soin a sa propre fréquence cible.
+      Quand un soin atteint son objectif de la semaine, sa ligne devient violette.
+    </div>
+  `;
+  return html;
 }
 
 // ============== SHOPPING ==============
@@ -2507,6 +2718,7 @@ function render() {
   const c = document.getElementById("content");
   if (view === "week") c.innerHTML = renderWeek();
   else if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "skin") c.innerHTML = renderSkin();
   else if (view === "manage") c.innerHTML = renderManage();
   else if (view === "shopping") c.innerHTML = renderShopping();
   else if (view === "settings") c.innerHTML = renderSettings();
@@ -2882,7 +3094,19 @@ function renderWeek() {
     return pa - pb;
   });
 
-  let html = renderWeekPlanBoard(days);
+  // Week navigation at the very top
+  let html = `
+    <div class="grid-nav" style="padding:0 4px;margin-bottom:12px">
+      <button onclick="weekOffset--; render();">← Précédente</button>
+      <div class="grid-nav-title">
+        Semaine du ${weekRangeLabel(weekOffset)}${weekOffset === 0 ? " (en cours)" : ""}
+        ${weekOffset !== 0 ? `<button class="section-plus" style="font-size:12px;margin-left:8px" onclick="weekOffset=0; render();" title="Revenir à cette semaine">↺ aujourd'hui</button>` : ""}
+      </div>
+      <button onclick="weekOffset++; render();">Suivante →</button>
+    </div>
+  `;
+
+  html += renderWeekPlanBoard(days);
 
   if (state.active.length === 0) {
     html += `<div class="section">
@@ -2897,14 +3121,6 @@ function renderWeek() {
 
   html += `
     <div class="grid-wrap">
-      <div class="grid-nav">
-        <button onclick="weekOffset--; render();">← Précédente</button>
-        <div class="grid-nav-title">
-          Semaine du ${weekRangeLabel(weekOffset)}${weekOffset === 0 ? " (en cours)" : ""}
-          ${weekOffset !== 0 ? `<button class="section-plus" style="font-size:12px;margin-left:8px" onclick="weekOffset=0; render();" title="Revenir à cette semaine">↺ aujourd'hui</button>` : ""}
-        </div>
-        <button onclick="weekOffset++; render();">Suivante →</button>
-      </div>
       <table class="grid-table">
         <thead>
           <tr>
