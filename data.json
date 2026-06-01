@@ -135,6 +135,13 @@
         "text": "courses",
         "done": false
       }
+    ],
+    "2026-06-02": [
+      {
+        "id": "ojslhu7g1zqt",
+        "text": "shopping",
+        "done": false
+      }
     ]
   },
   "planTemplates": [],
