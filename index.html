@@ -1,0 +1,3611 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes routines</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  line-height: 1.5;
+  padding: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* Header */
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 2px;
+}
+.today {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 18px;
+  text-transform: capitalize;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: white;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.tab:hover { color: #0f172a; }
+.tab.active {
+  background: #0f172a;
+  color: white;
+}
+.tab .badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  margin-left: 4px;
+}
+.tab:not(.active) .badge {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+/* Section */
+.section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.section-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-primary {
+  background: #0f172a;
+  color: white;
+}
+.btn-primary:hover { background: #1e293b; }
+.btn-secondary {
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+.btn-secondary:hover { background: #f1f5f9; }
+.btn-danger {
+  background: transparent;
+  color: #ef4444;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.btn-danger:hover { background: #fef2f2; }
+.btn-icon {
+  background: transparent;
+  color: #94a3b8;
+  padding: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+}
+.btn-icon:hover { background: #f1f5f9; color: #0f172a; }
+
+/* Item rows */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.item:last-child { border-bottom: none; }
+.item-check {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #cbd5e1;
+  border-radius: 7px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  transition: all 0.15s;
+}
+.item-check:hover { border-color: #94a3b8; }
+.item-check.checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+.item-check.checked::after {
+  content: "✓";
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+}
+.item-main {
+  flex: 1;
+  min-width: 0;
+}
+.item-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+  word-break: break-word;
+}
+.item-title.done {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+.item-meta {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.tag-cat { background: #e0e7ff; color: #4338ca; }
+.tag-freq { background: #fef3c7; color: #b45309; }
+.tag-prog { background: #f1f5f9; color: #64748b; font-weight: 500; }
+.tag-prog.full { background: #dcfce7; color: #15803d; font-weight: 600; }
+.tag-streak { background: #fce7f3; color: #be185d; }
+
+.item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* Add form */
+.add-form {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  border: 1px dashed #cbd5e1;
+  display: none;
+}
+.add-form.open { display: block; }
+.add-form input, .add-form select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 8px;
+  background: white;
+}
+.add-form input:focus, .add-form select:focus {
+  outline: none;
+  border-color: #0f172a;
+}
+.form-row { display: flex; gap: 8px; }
+.form-row > * { flex: 1; }
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.empty {
+  text-align: center;
+  padding: 24px 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.stat {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.stat-label {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* Modal */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.modal pre {
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  overflow-x: auto;
+  max-height: 200px;
+  margin: 8px 0;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.modal textarea {
+  width: 100%;
+  height: 120px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* Grid view (week / month) */
+.grid-wrap {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.grid-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.grid-nav-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.grid-nav button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  color: #475569;
+}
+.grid-nav button:hover { background: #f1f5f9; }
+.grid-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 13px;
+}
+.grid-table th, .grid-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+.grid-table th {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 8px;
+  background: #f8fafc;
+}
+.grid-table th.day-today, .grid-table td.day-today {
+  background: #f5f3ff;
+}
+.grid-table tr.row-perfect td {
+  background: #ede9fe;
+}
+.grid-table tr.row-perfect td.task-cell {
+  background: #ede9fe;
+  color: #5b21b6;
+  font-weight: 600;
+}
+.grid-table tr.row-perfect td.day-today {
+  background: #ddd6fe;
+}
+.grid-table tr.row-perfect .tag-prog {
+  background: #c4b5fd;
+  color: #5b21b6;
+}
+.routine-edit-icon {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 12px;
+  margin-left: 4px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.routine-edit-icon:hover { color: #0f172a; background: #e2e8f0; }
+.header-plus {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 14px;
+  margin-left: 4px;
+  font-family: inherit;
+  font-weight: 700;
+  vertical-align: baseline;
+}
+.header-plus:hover { color: #64748b; }
+.section-plus {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 18px;
+  font-family: inherit;
+  font-weight: 400;
+  border-radius: 6px;
+}
+.section-plus:hover { color: #0f172a; background: #f1f5f9; }
+.grid-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.task-rectangles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.task-rect {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+}
+.task-rect h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #0f172a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.task-rect .count {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+.task-line {
+  padding: 8px 6px;
+  font-size: 13px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  color: #0f172a;
+  transition: background 0.1s;
+}
+.task-line:last-child { border-bottom: none; }
+.task-line:hover { background: #f8fafc; }
+.task-line.done {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+.task-line-text { flex: 1; word-break: break-word; }
+.task-line-meta {
+  font-size: 11px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+.task-line-del, .task-line-edit {
+  color: #cbd5e1;
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+.task-line:hover .task-line-del,
+.task-line:hover .task-line-edit { opacity: 1; }
+.task-line-del:hover { color: #ef4444; }
+.task-line-edit:hover { color: #0f172a; }
+.task-line-cat {
+  font-size: 10px;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.task-rect .empty-small {
+  text-align: center;
+  padding: 12px 0;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .task-rectangles { grid-template-columns: 1fr; }
+}
+.drag-handle {
+  cursor: grab;
+  color: #cbd5e1;
+  font-size: 14px;
+  user-select: none;
+  padding: 2px 4px;
+}
+.drag-handle:hover { color: #64748b; }
+.grid-table tr.dragging { opacity: 0.5; }
+.grid-table tr.drag-over td { border-top: 2px solid #7c3aed; }
+.category-header td {
+  background: #f8fafc !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b !important;
+  padding: 10px 8px 6px !important;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  position: sticky;
+  left: 0;
+}
+.category-header .cat-actions {
+  float: right;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.category-header .cat-hide-btn {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 4px;
+  font-family: inherit;
+}
+.category-header .cat-hide-btn:hover { color: #64748b; }
+.show-all-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 8px auto;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: block;
+  font-family: inherit;
+}
+.show-all-btn:hover { background: #f1f5f9; color: #64748b; }
+.category-header.is-hidden { opacity: 0.6; }
+.category-header.is-hidden .cat-hide-btn { color: #94a3b8; }
+
+/* Month calendar grid */
+.month-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-header {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 0 8px;
+}
+.cal-cell {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  min-height: 70px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.1s;
+}
+.cal-cell:hover { background: #f8fafc; border-color: #94a3b8; }
+.cal-cell.other-month {
+  background: #fafbfc;
+  border-color: #f1f5f9;
+}
+.cal-cell.other-month .cal-cell-num { color: #cbd5e1; }
+.cal-cell.is-today {
+  border-color: #7c3aed;
+  border-width: 2px;
+  padding: 5px;
+}
+.cal-cell-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.cal-cell-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.cal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #94a3b8;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.cal-dot.done { opacity: 0.35; }
+.cal-dot.color-violet { background: #7c3aed; }
+.cal-dot.color-blue   { background: #2563eb; }
+.cal-dot.color-green  { background: #16a34a; }
+.cal-dot.color-yellow { background: #eab308; }
+.cal-dot.color-orange { background: #f97316; }
+.cal-dot.color-pink   { background: #ec4899; }
+.cal-dot.color-gray   { background: #64748b; }
+@media (max-width: 500px) {
+  .cal-cell { min-height: 50px; padding: 4px; }
+  .cal-cell-num { font-size: 11px; }
+  .cal-dot { width: 7px; height: 7px; }
+  .cal-header { font-size: 10px; padding: 4px 0 6px; }
+}
+
+/* Shopping layout */
+.shopping-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.shop-right-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.shop-right-add {
+  text-align: center;
+  margin-top: 4px;
+}
+@media (max-width: 700px) {
+  .shopping-layout { grid-template-columns: 1fr; }
+}
+.shop-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.shop-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #0f172a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop-title-edit {
+  background: transparent;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: 100%;
+  outline: none;
+}
+.shop-title-edit:hover { border-color: #e2e8f0; cursor: text; }
+.shop-title-edit:focus { border-color: #7c3aed; background: white; }
+.shop-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 4px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.shop-row:hover { background: #fafbfc; }
+.shop-row.done .shop-text { text-decoration: line-through; color: #94a3b8; }
+.shop-row-check {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+  flex-shrink: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shop-row.done .shop-row-check {
+  background: #10b981;
+  border-color: #10b981;
+}
+.shop-row.done .shop-row-check::after {
+  content: "✓";
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+.shop-text {
+  flex: 1;
+  font-size: 13px;
+  color: #0f172a;
+  word-break: break-word;
+}
+.shop-row-del {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.shop-row:hover .shop-row-del { opacity: 1; }
+.shop-row-del:hover { color: #ef4444; }
+.shop-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #7c3aed;
+}
+.shop-divider::before, .shop-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ddd6fe;
+}
+.shop-divider-edit {
+  background: transparent;
+  border: none;
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 2px 6px;
+  text-align: center;
+  font-family: inherit;
+  outline: none;
+  min-width: 40px;
+}
+.shop-divider:hover .shop-divider-del { opacity: 1; }
+.shop-divider-del {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  transition: opacity 0.15s;
+}
+.shop-divider-del:hover { color: #ef4444; }
+.shop-add-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+.shop-add-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.shop-add-row input:focus { border-color: #7c3aed; }
+.shop-add-row button {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.shop-add-row button:hover { background: #e2e8f0; }
+.shop-add-row button.add-divider { color: #7c3aed; }
+.shop-empty {
+  color: #cbd5e1;
+  text-align: center;
+  padding: 16px 0;
+  font-size: 12px;
+}
+
+/* GitHub sync indicator */
+.sync-indicator {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 50;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: all 0.15s;
+}
+.sync-indicator:hover { border-color: #94a3b8; }
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+.sync-dot.synced { background: #10b981; }
+.sync-dot.syncing { background: #eab308; animation: pulse 1s infinite; }
+.sync-dot.error { background: #ef4444; }
+.sync-dot.local { background: #94a3b8; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.sync-text { color: #475569; }
+
+.setup-help {
+  background: #f1f5f9;
+  border-left: 3px solid #7c3aed;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #334155;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.setup-help a { color: #7c3aed; text-decoration: underline; }
+.grid-table th.task-col {
+  text-align: left;
+  padding-left: 8px;
+  min-width: 160px;
+  position: sticky;
+  left: 0;
+  background: #f8fafc;
+  z-index: 1;
+}
+.grid-table td.task-cell {
+  text-align: left;
+  padding-left: 8px;
+  font-size: 13px;
+  color: #0f172a;
+  font-weight: 500;
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 1;
+  border-right: 1px solid #f1f5f9;
+}
+.grid-table tr:hover td.task-cell { background: #fafbfc; }
+.cell-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+.cell-box:hover { border-color: #94a3b8; }
+.cell-box.checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+.cell-box.checked::after { content: "✓"; }
+.cell-box.future {
+  background: #f8fafc;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.smiley-row td {
+  border-top: 2px solid #e2e8f0;
+  border-bottom: none;
+  padding-top: 8px;
+  padding-bottom: 4px;
+  font-size: 22px;
+}
+.smiley-row td.task-cell {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.smiley-empty { color: #cbd5e1; }
+.totals-row td {
+  font-size: 12px;
+  color: #64748b;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+}
+.totals-row td.task-cell {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+.month-day-num { font-size: 10px; opacity: 0.7; }
+.weekend th { color: #94a3b8; }
+
+/* Weekly free planning */
+.week-plan {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(115px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+.plan-day {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.plan-day:hover {
+  background: #ffffff;
+  border-color: #94a3b8;
+}
+.plan-day.is-today { background: #f5f3ff; border-color: #ddd6fe; }
+.plan-day.is-today:hover { background: #ffffff; }
+.plan-day.is-weekend .plan-day-label { color: #ef4444; }
+.plan-day-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.plan-day-num {
+  color: #0f172a;
+  font-size: 18px;
+  display: block;
+  margin-top: 2px;
+  font-weight: 700;
+}
+.plan-items { flex: 1; min-height: 24px; }
+.plan-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  word-break: break-word;
+  line-height: 1.4;
+}
+.plan-item.done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+.plan-item-check {
+  width: 14px; height: 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.plan-item-check.checked {
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+.plan-item-check.checked::after {
+  content: "✓";
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+.plan-item-text { flex: 1; cursor: pointer; }
+.plan-item-del {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  font-family: inherit;
+}
+.plan-item-del:hover { color: #ef4444; }
+.plan-add {
+  margin-top: 6px;
+  background: transparent;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+}
+.plan-add:hover { color: #0f172a; border-color: #94a3b8; background: white; }
+.plan-add-hint {
+  margin-top: 6px;
+  color: #cbd5e1;
+  font-size: 11px;
+  text-align: center;
+  padding: 4px;
+  border-top: 1px dashed #e2e8f0;
+}
+.plan-day:hover .plan-add-hint { color: #94a3b8; }
+.plan-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  margin-top: 6px;
+  outline: none;
+}
+.templates-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.templates-hint {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+.template-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.template-card-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #0f172a;
+  min-width: 100px;
+  flex: 1;
+}
+.color-picker {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin: 0 8px;
+}
+.color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.1s;
+}
+.color-dot:hover { transform: scale(1.15); }
+.color-dot.selected { border-color: #0f172a; }
+.plan-item.color-violet { background: #ede9fe; border-color: #c4b5fd; }
+.plan-item.color-blue   { background: #dbeafe; border-color: #93c5fd; }
+.plan-item.color-green  { background: #dcfce7; border-color: #86efac; }
+.plan-item.color-yellow { background: #fef3c7; border-color: #fcd34d; }
+.plan-item.color-orange { background: #ffedd5; border-color: #fdba74; }
+.plan-item.color-pink   { background: #fce7f3; border-color: #f9a8d4; }
+.plan-item.color-gray   { background: #f1f5f9; border-color: #cbd5e1; }
+.template-card.color-violet .template-card-name { color: #5b21b6; }
+.template-card.color-blue   .template-card-name { color: #1e40af; }
+.template-card.color-green  .template-card-name { color: #15803d; }
+.template-card.color-yellow .template-card-name { color: #92400e; }
+.template-card.color-orange .template-card-name { color: #9a3412; }
+.template-card.color-pink   .template-card-name { color: #9d174d; }
+.template-day-buttons {
+  display: flex;
+  gap: 4px;
+}
+.template-day-btn {
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  font-family: inherit;
+}
+.template-day-btn:hover {
+  background: #7c3aed;
+  color: white;
+  border-color: #7c3aed;
+}
+.template-del-btn {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.template-del-btn:hover { color: #ef4444; }
+.template-add-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.template-add-row input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+}
+@media (max-width: 600px) {
+  .template-day-buttons { flex-wrap: wrap; }
+}
+
+@media (max-width: 500px) {
+  body { padding: 10px; }
+  h1 { font-size: 22px; }
+  .stat-value { font-size: 18px; }
+  .item { padding: 12px 0; }
+  .tabs { padding: 3px; }
+  .tab { padding: 10px 8px; font-size: 12px; min-width: 70px; }
+  .grid-table th.task-col, .grid-table td.task-cell { min-width: 120px; font-size: 12px; }
+  .cell-box { width: 22px; height: 22px; }
+  .week-plan { grid-template-columns: repeat(7, 140px); }
+}
+</style>
+</head>
+<body>
+<div class="sync-indicator" id="syncIndicator" onclick="openSyncModal()" title="Statut de la synchronisation">
+  <div class="sync-dot local" id="syncDot"></div>
+  <span class="sync-text" id="syncText">Local</span>
+</div>
+
+<div class="container">
+  <h1>Mes routines</h1>
+  <div class="today" id="today"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-view="week">Semaine</button>
+    <button class="tab" data-view="month">Mois</button>
+    <button class="tab" data-view="manage">Mes listes <span class="badge" id="badge-total">0</span></button>
+    <button class="tab" data-view="shopping">Shopping</button>
+    <button class="tab" data-view="settings">Sync</button>
+  </div>
+
+  <div id="content"></div>
+
+  <div class="footer">
+    Sauvegarde locale dans ce navigateur — utilise l'onglet "Sync" pour transférer entre tes appareils.
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this) closeModal()">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+// ================== STATE ==================
+const STORAGE_KEY = "routines_tracker_v1";
+const DEFAULT_STATE = {
+  active: [],         // [{id, name, category, frequency, target, createdAt}]
+  waiting: [],        // [{id, name, category, note, createdAt}]
+  todos: [],          // [{id, name, category, dueDate, done, createdAt}]
+  completions: {},    // {activityId: {"2026-05-21": true, ...}}
+  weeklyPlan: {},     // {"2026-05-21": [{id, text, done, color}, ...]}
+  planTemplates: [],  // [{id, name, color}] — activités fréquentes pour le planning
+  hiddenCategories: [], // [string] — catégories de routines masquées en vue Semaine/Mois
+  shopping: {
+    courses: [],      // [{id, type:"item"|"divider", text, done}]
+    rightLists: [
+      { id: "rl1", title: "Maison", items: [] },
+      { id: "rl2", title: "Art / loisirs", items: [] }
+    ]
+  }
+};
+
+const TEMPLATE_COLORS = [
+  { id: "violet", bg: "#ede9fe", border: "#c4b5fd", text: "#5b21b6" },
+  { id: "blue",   bg: "#dbeafe", border: "#93c5fd", text: "#1e40af" },
+  { id: "green",  bg: "#dcfce7", border: "#86efac", text: "#15803d" },
+  { id: "yellow", bg: "#fef3c7", border: "#fcd34d", text: "#92400e" },
+  { id: "orange", bg: "#ffedd5", border: "#fdba74", text: "#9a3412" },
+  { id: "pink",   bg: "#fce7f3", border: "#f9a8d4", text: "#9d174d" },
+  { id: "gray",   bg: "#f1f5f9", border: "#cbd5e1", text: "#475569" }
+];
+function colorById(id) {
+  return TEMPLATE_COLORS.find(c => c.id === id) || null;
+}
+
+const SUGGESTED_CATEGORIES = ["Sport", "Santé", "Bien-être", "Apprentissage", "Travail", "Maison", "Loisirs", "Social"];
+function getAllCategories() {
+  const cats = new Set(SUGGESTED_CATEGORIES);
+  (state.active || []).forEach(a => { if (a.category && a.category.trim()) cats.add(a.category.trim()); });
+  (state.waiting || []).forEach(a => { if (a.category && a.category.trim()) cats.add(a.category.trim()); });
+  (state.todos || []).forEach(a => { if (a.category && a.category.trim()) cats.add(a.category.trim()); });
+  return [...cats].sort((a, b) => a.localeCompare(b, "fr"));
+}
+function categoryDatalist(id) {
+  return `<datalist id="${id}">${getAllCategories().map(c => `<option value="${escapeAttr(c)}">`).join("")}</datalist>`;
+}
+
+let state = loadState();
+let view = "week";
+let weekOffset = 0;  // 0 = current week, -1 = last week, etc.
+let monthOffset = 0; // 0 = current month, -1 = last month
+let showAllCategories = false; // transient: reveals hidden categories
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    const parsed = JSON.parse(raw);
+    const merged = { ...DEFAULT_STATE, ...parsed };
+    // Ensure shopping has the expected substructure
+    if (!merged.shopping || typeof merged.shopping !== "object") {
+      merged.shopping = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping));
+    } else {
+      if (!Array.isArray(merged.shopping.courses)) merged.shopping.courses = [];
+      if (!Array.isArray(merged.shopping.rightLists)) merged.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
+    }
+    if (!Array.isArray(merged.hiddenCategories)) merged.hiddenCategories = [];
+    return merged;
+  } catch (e) {
+    console.error(e);
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  scheduleGitHubPush();
+}
+
+// ============== GITHUB SYNC ==============
+const GH_CONFIG_KEY = "gh_sync_config_v1";
+const GH_DEFAULT_PATH = "data.json";
+let ghConfig = null;
+let ghSha = null;
+let ghPushTimer = null;
+let ghStatus = "local"; // "local" | "synced" | "syncing" | "error"
+let ghLastError = null;
+
+function loadGhConfig() {
+  try {
+    const raw = localStorage.getItem(GH_CONFIG_KEY);
+    if (raw) ghConfig = JSON.parse(raw);
+  } catch (e) { console.error(e); }
+}
+function saveGhConfig(cfg) {
+  ghConfig = cfg;
+  localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(cfg));
+}
+function clearGhConfig() {
+  ghConfig = null;
+  ghSha = null;
+  ghStatus = "local";
+  localStorage.removeItem(GH_CONFIG_KEY);
+  updateSyncIndicator();
+}
+
+function ghApiUrl(path) {
+  return `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${path}`;
+}
+function ghHeaders() {
+  return {
+    "Accept": "application/vnd.github+json",
+    "Authorization": `Bearer ${ghConfig.token}`,
+    "X-GitHub-Api-Version": "2022-11-28"
+  };
+}
+
+async function ghRead() {
+  if (!ghConfig) throw new Error("Pas de config");
+  const branch = ghConfig.branch || "main";
+  const path = ghConfig.path || GH_DEFAULT_PATH;
+  const res = await fetch(ghApiUrl(path) + "?ref=" + branch, { headers: ghHeaders() });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`GET ${res.status}: ${txt.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  ghSha = data.sha;
+  const decoded = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ""))));
+  return JSON.parse(decoded);
+}
+
+async function ghWrite(payload) {
+  if (!ghConfig) throw new Error("Pas de config");
+  const path = ghConfig.path || GH_DEFAULT_PATH;
+  const branch = ghConfig.branch || "main";
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+  const body = {
+    message: `update ${new Date().toISOString()}`,
+    content,
+    branch
+  };
+  if (ghSha) body.sha = ghSha;
+  let res = await fetch(ghApiUrl(path), {
+    method: "PUT",
+    headers: { ...ghHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (res.status === 409 || (res.status === 422 && (await res.clone().text()).includes("sha"))) {
+    // SHA conflict — refetch and retry once
+    try {
+      await ghRead();
+      body.sha = ghSha;
+      res = await fetch(ghApiUrl(path), {
+        method: "PUT",
+        headers: { ...ghHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+    } catch (e) { throw new Error("Conflit de sync: " + e.message); }
+  }
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`PUT ${res.status}: ${txt.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  ghSha = data.content.sha;
+}
+
+async function ghInitialLoad() {
+  if (!ghConfig) return;
+  setSyncStatus("syncing");
+  try {
+    const cloud = await ghRead();
+    if (cloud) {
+      // Merge with defaults to be safe
+      state = { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...cloud };
+      if (!state.shopping) state.shopping = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping));
+      else {
+        if (!Array.isArray(state.shopping.courses)) state.shopping.courses = [];
+        if (!Array.isArray(state.shopping.rightLists)) state.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
+      }
+      if (!Array.isArray(state.hiddenCategories)) state.hiddenCategories = [];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } else {
+      // No file on GitHub yet — push current local state
+      await ghWrite(state);
+    }
+    setSyncStatus("synced");
+  } catch (e) {
+    console.error("Initial GitHub load failed:", e);
+    ghLastError = e.message;
+    setSyncStatus("error");
+  }
+  render();
+}
+
+function scheduleGitHubPush() {
+  if (!ghConfig) return;
+  if (ghPushTimer) clearTimeout(ghPushTimer);
+  ghPushTimer = setTimeout(pushNow, 1500);
+}
+
+async function pushNow() {
+  if (!ghConfig) return;
+  if (ghPushTimer) { clearTimeout(ghPushTimer); ghPushTimer = null; }
+  setSyncStatus("syncing");
+  try {
+    await ghWrite(state);
+    ghLastError = null;
+    setSyncStatus("synced");
+  } catch (e) {
+    console.error("Push failed:", e);
+    ghLastError = e.message;
+    setSyncStatus("error");
+  }
+}
+
+async function pullNow() {
+  if (!ghConfig) return;
+  setSyncStatus("syncing");
+  try {
+    const cloud = await ghRead();
+    if (cloud) {
+      state = { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...cloud };
+      if (!state.shopping) state.shopping = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping));
+      else {
+        if (!Array.isArray(state.shopping.courses)) state.shopping.courses = [];
+        if (!Array.isArray(state.shopping.rightLists)) state.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
+      }
+      if (!Array.isArray(state.hiddenCategories)) state.hiddenCategories = [];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    ghLastError = null;
+    setSyncStatus("synced");
+    render();
+  } catch (e) {
+    console.error("Pull failed:", e);
+    ghLastError = e.message;
+    setSyncStatus("error");
+  }
+}
+
+function setSyncStatus(s) {
+  ghStatus = s;
+  updateSyncIndicator();
+}
+function updateSyncIndicator() {
+  const dot = document.getElementById("syncDot");
+  const txt = document.getElementById("syncText");
+  if (!dot || !txt) return;
+  dot.className = "sync-dot " + ghStatus;
+  const labels = {
+    local: "Local",
+    synced: "Sync ✓",
+    syncing: "Sync…",
+    error: "Erreur sync"
+  };
+  txt.textContent = labels[ghStatus] || "Local";
+}
+
+function openSyncModal() {
+  if (!ghConfig) {
+    openSyncSetupModal();
+    return;
+  }
+  openModal(`
+    <h3>Synchronisation GitHub</h3>
+    <div class="setup-help" style="border-color:${ghStatus === "synced" ? "#10b981" : ghStatus === "error" ? "#ef4444" : "#94a3b8"}">
+      <strong>Statut :</strong> ${ghStatus === "synced" ? "Synchronisé ✓" : ghStatus === "syncing" ? "Sync en cours…" : ghStatus === "error" ? "Erreur" : "Local"}
+      ${ghLastError ? `<br><span style="color:#ef4444;font-size:11px">${escapeHtml(ghLastError)}</span>` : ""}
+    </div>
+    <div style="font-size:13px;color:#475569;margin-bottom:8px">
+      <strong>Repo :</strong> ${escapeHtml(ghConfig.owner)}/${escapeHtml(ghConfig.repo)}<br>
+      <strong>Fichier :</strong> ${escapeHtml(ghConfig.path || GH_DEFAULT_PATH)}<br>
+      <strong>Branche :</strong> ${escapeHtml(ghConfig.branch || "main")}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn btn-primary" onclick="closeModal(); pushNow()">Pousser maintenant</button>
+      <button class="btn btn-secondary" onclick="closeModal(); pullNow()">Récupérer du cloud</button>
+      <button class="btn btn-secondary" onclick="openSyncSetupModal()">Reconfigurer</button>
+      <button class="btn btn-secondary" style="color:#ef4444" onclick="if(confirm('Déconnecter GitHub ? Tes données restent en local mais ne synchronisent plus.')) { clearGhConfig(); closeModal(); }">Déconnecter</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Fermer</button>
+    </div>
+  `);
+}
+
+function openSyncSetupModal() {
+  const cur = ghConfig || {};
+  openModal(`
+    <h3>Configurer la sync GitHub</h3>
+    <div class="setup-help">
+      Cette config est stockée localement sur cet appareil. Tu devras la refaire sur chaque appareil.
+      <br>Si tu n'as pas encore créé le token, demande à Claude le guide pas à pas.
+    </div>
+    <label style="font-size:12px;color:#475569;font-weight:500">Pseudo GitHub</label>
+    <input type="text" id="gh-owner" value="${escapeAttr(cur.owner||'')}" placeholder="esperanzasmith" style="width:100%;padding:9px;margin:4px 0 10px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <label style="font-size:12px;color:#475569;font-weight:500">Nom du repo</label>
+    <input type="text" id="gh-repo" value="${escapeAttr(cur.repo||'mes-routines')}" placeholder="mes-routines" style="width:100%;padding:9px;margin:4px 0 10px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <label style="font-size:12px;color:#475569;font-weight:500">Personal Access Token</label>
+    <input type="password" id="gh-token" value="${escapeAttr(cur.token||'')}" placeholder="ghp_xxxx... ou github_pat_..." style="width:100%;padding:9px;margin:4px 0 10px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:monospace">
+    <label style="font-size:12px;color:#475569;font-weight:500">Nom du fichier de données</label>
+    <input type="text" id="gh-path" value="${escapeAttr(cur.path||GH_DEFAULT_PATH)}" placeholder="data.json" style="width:100%;padding:9px;margin:4px 0 10px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <label style="font-size:12px;color:#475569;font-weight:500">Branche</label>
+    <input type="text" id="gh-branch" value="${escapeAttr(cur.branch||'main')}" placeholder="main" style="width:100%;padding:9px;margin:4px 0 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="saveAndTestSync()">Tester et activer</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+  `);
+}
+
+async function saveAndTestSync() {
+  const owner = document.getElementById("gh-owner").value.trim();
+  const repo = document.getElementById("gh-repo").value.trim();
+  const token = document.getElementById("gh-token").value.trim();
+  const path = document.getElementById("gh-path").value.trim() || GH_DEFAULT_PATH;
+  const branch = document.getElementById("gh-branch").value.trim() || "main";
+  if (!owner || !repo || !token) { alert("Pseudo, repo et token requis"); return; }
+  const newCfg = { owner, repo, token, path, branch };
+  // Temporarily set config
+  const oldCfg = ghConfig;
+  ghConfig = newCfg;
+  setSyncStatus("syncing");
+  try {
+    const cloud = await ghRead();
+    if (cloud) {
+      // Cloud has data — ask user what to do
+      ghConfig = oldCfg;
+      const choice = confirm(
+        "Des données existent déjà sur GitHub.\n\n" +
+        "OK = utiliser les données du cloud (écrase tes données locales actuelles)\n" +
+        "Annuler = écraser les données du cloud avec tes données locales actuelles"
+      );
+      ghConfig = newCfg;
+      if (choice) {
+        // Use cloud
+        state = { ...JSON.parse(JSON.stringify(DEFAULT_STATE)), ...cloud };
+        if (!state.shopping) state.shopping = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping));
+        else {
+          if (!Array.isArray(state.shopping.courses)) state.shopping.courses = [];
+          if (!Array.isArray(state.shopping.rightLists)) state.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
+        }
+        if (!Array.isArray(state.hiddenCategories)) state.hiddenCategories = [];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } else {
+        // Push local to cloud
+        await ghWrite(state);
+      }
+    } else {
+      // No cloud data — push local
+      await ghWrite(state);
+    }
+    saveGhConfig(newCfg);
+    ghLastError = null;
+    setSyncStatus("synced");
+    closeModal();
+    render();
+  } catch (e) {
+    ghConfig = oldCfg;
+    setSyncStatus(oldCfg ? "synced" : "local");
+    alert("Échec : " + e.message + "\n\nVérifie le pseudo, le repo, le token et que le repo existe.");
+  }
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+// ================== DATE HELPERS ==================
+function dateToKey(d) {
+  // Use LOCAL date parts to avoid timezone shifts (toISOString uses UTC and shifts in GMT+X)
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+function todayKey() {
+  return dateToKey(new Date());
+}
+function weekKey() {
+  const d = new Date();
+  const day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day);
+  return dateToKey(d);
+}
+function daysOfThisWeek() {
+  const d = new Date();
+  const day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    days.push(dateToKey(new Date(d.getTime() + i * 86400000)));
+  }
+  return days;
+}
+function monthKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+function daysOfThisMonth() {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  const last = new Date(y, m + 1, 0).getDate();
+  const days = [];
+  for (let i = 1; i <= last; i++) {
+    days.push(dateToKey(new Date(y, m, i)));
+  }
+  return days;
+}
+function formatToday() {
+  const d = new Date();
+  return d.toLocaleDateString("fr-FR", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  });
+}
+
+// ================== FREQUENCY LOGIC ==================
+const FREQUENCIES = [
+  { id: "daily",       label: "Tous les jours",        target: 7, period: "week" },
+  { id: "6week",       label: "6 fois par semaine",    target: 6, period: "week" },
+  { id: "5week",       label: "5 fois par semaine",    target: 5, period: "week" },
+  { id: "4week",       label: "4 fois par semaine",    target: 4, period: "week" },
+  { id: "3week",       label: "3 fois par semaine",    target: 3, period: "week" },
+  { id: "2week",       label: "2 fois par semaine",    target: 2, period: "week" },
+  { id: "weekly",      label: "1 fois par semaine",    target: 1, period: "week" },
+  { id: "biweekly",    label: "Toutes les 2 semaines", target: 1, period: "2week" },
+  { id: "monthly",     label: "1 fois par mois",       target: 1, period: "month" }
+];
+
+function getFrequency(id) {
+  return FREQUENCIES.find(f => f.id === id) || FREQUENCIES[0];
+}
+
+function progress(activity) {
+  const freq = getFrequency(activity.frequency);
+  const completions = state.completions[activity.id] || {};
+  let days;
+  if (freq.period === "week") days = daysOfThisWeek();
+  else if (freq.period === "2week") {
+    days = daysOfThisWeek();
+    // include previous week too
+    const prev = days.map(d => {
+      const dt = new Date(d);
+      dt.setDate(dt.getDate() - 7);
+      return dateToKey(dt);
+    });
+    days = [...prev, ...days];
+  }
+  else days = daysOfThisMonth();
+  const done = days.filter(d => completions[d]).length;
+  return { done, target: freq.target, period: freq.period };
+}
+
+function doneToday(activity) {
+  const completions = state.completions[activity.id] || {};
+  return !!completions[todayKey()];
+}
+
+function toggleToday(activity) {
+  if (!state.completions[activity.id]) state.completions[activity.id] = {};
+  const t = todayKey();
+  if (state.completions[activity.id][t]) {
+    delete state.completions[activity.id][t];
+  } else {
+    state.completions[activity.id][t] = true;
+  }
+  saveState();
+  render();
+}
+
+function toggleDay(activityId, dateKey) {
+  // Don't allow ticking future days
+  if (dateKey > todayKey()) return;
+  if (!state.completions[activityId]) state.completions[activityId] = {};
+  if (state.completions[activityId][dateKey]) {
+    delete state.completions[activityId][dateKey];
+  } else {
+    state.completions[activityId][dateKey] = true;
+  }
+  saveState();
+  render();
+}
+
+// ============== PLAN TEMPLATES (activités fréquentes) ==============
+let showTemplates = false;
+function toggleTemplatesPanel() {
+  showTemplates = !showTemplates;
+  render();
+}
+function addPlanTemplate() {
+  const input = document.getElementById("new-tpl-name");
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.planTemplates) state.planTemplates = [];
+  state.planTemplates.push({ id: uid(), name, color: "gray" });
+  saveState();
+  render();
+}
+function setTemplateColor(id, colorId) {
+  const t = (state.planTemplates || []).find(x => x.id === id);
+  if (!t) return;
+  t.color = colorId;
+  saveState();
+  render();
+}
+function removePlanTemplate(id) {
+  if (!confirm("Supprimer ce raccourci ?")) return;
+  state.planTemplates = (state.planTemplates || []).filter(x => x.id !== id);
+  saveState();
+  render();
+}
+function addTemplateToDay(templateId, dateKey) {
+  const t = (state.planTemplates || []).find(x => x.id === templateId);
+  if (!t) return;
+  if (!state.weeklyPlan) state.weeklyPlan = {};
+  if (!state.weeklyPlan[dateKey]) state.weeklyPlan[dateKey] = [];
+  state.weeklyPlan[dateKey].push({ id: uid(), text: t.name, done: false, color: t.color || null });
+  saveState();
+  render();
+}
+
+// ============== WEEKLY FREE PLAN ==============
+function getPlanItems(dateKey) {
+  return (state.weeklyPlan && state.weeklyPlan[dateKey]) || [];
+}
+function addPlanItem(dateKey, text) {
+  if (!state.weeklyPlan) state.weeklyPlan = {};
+  if (!state.weeklyPlan[dateKey]) state.weeklyPlan[dateKey] = [];
+  state.weeklyPlan[dateKey].push({ id: uid(), text, done: false });
+  saveState();
+  render();
+}
+function togglePlanItem(dateKey, id) {
+  if (!state.weeklyPlan || !state.weeklyPlan[dateKey]) return;
+  const item = state.weeklyPlan[dateKey].find(x => x.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  saveState();
+  render();
+}
+function removePlanItem(dateKey, id) {
+  if (!state.weeklyPlan || !state.weeklyPlan[dateKey]) return;
+  state.weeklyPlan[dateKey] = state.weeklyPlan[dateKey].filter(x => x.id !== id);
+  saveState();
+  render();
+}
+function startAddPlanItem(dateKey) {
+  const day = document.querySelector(`[data-day="${dateKey}"]`);
+  if (!day) return;
+  const addBtn = day.querySelector(".plan-add");
+  if (!addBtn) return;
+  addBtn.style.display = "none";
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "plan-input";
+  input.placeholder = "Ajouter...";
+  day.appendChild(input);
+  input.focus();
+  let committed = false;
+  function commit() {
+    if (committed) return;
+    committed = true;
+    const v = input.value.trim();
+    if (v) addPlanItem(dateKey, v);
+    else render();
+  }
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); commit(); }
+    else if (e.key === "Escape") { committed = true; render(); }
+  });
+  input.addEventListener("blur", commit);
+}
+
+// ============== EDIT ROUTINE ==============
+function editRoutine(id) {
+  const a = state.active.find(x => x.id === id);
+  if (!a) return;
+  window._currentEditId = id;
+  openModal(`
+    <h3>Modifier la routine</h3>
+    <input type="text" id="e-name" value="${escapeAttr(a.name)}" placeholder="Nom" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <input list="cat-list-edit" type="text" id="e-cat" value="${escapeAttr(a.category||'')}" placeholder="Catégorie (choisir ou taper)" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    ${categoryDatalist("cat-list-edit")}
+    <select id="e-freq" style="width:100%;padding:9px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+      ${FREQUENCIES.map(f => `<option value="${f.id}" ${f.id === a.frequency ? "selected" : ""}>${f.label}</option>`).join("")}
+    </select>
+    <div style="display:flex;gap:8px;justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveRoutineEdit()">Enregistrer</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      </div>
+      <button class="btn btn-danger" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer" onclick="deleteRoutineFromModal()">Supprimer</button>
+    </div>
+  `);
+}
+function saveRoutineEdit() {
+  const id = window._currentEditId;
+  const a = state.active.find(x => x.id === id);
+  if (!a) return;
+  const name = document.getElementById("e-name").value.trim();
+  if (!name) { alert("Donne un nom à la routine"); return; }
+  a.name = name;
+  a.category = document.getElementById("e-cat").value.trim();
+  a.frequency = document.getElementById("e-freq").value;
+  saveState();
+  closeModal();
+  render();
+}
+function deleteRoutineFromModal() {
+  const id = window._currentEditId;
+  if (!confirm("Supprimer cette routine ? Toute la progression sera perdue.")) return;
+  state.active = state.active.filter(x => x.id !== id);
+  delete state.completions[id];
+  saveState();
+  closeModal();
+  render();
+}
+
+// ============== ADD ROUTINE FROM GRID ==============
+function addRoutineFromGrid() {
+  openModal(`
+    <h3>Nouvelle routine</h3>
+    <input type="text" id="g-name" placeholder="Nom de la routine (ex: Méditation, Footing)" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <input list="cat-list-new" type="text" id="g-cat" placeholder="Catégorie (choisir ou taper une nouvelle)" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    ${categoryDatalist("cat-list-new")}
+    <select id="g-freq" style="width:100%;padding:9px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+      ${FREQUENCIES.map(f => `<option value="${f.id}">${f.label}</option>`).join("")}
+    </select>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="saveNewRoutine()">Ajouter</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+  `);
+  setTimeout(() => document.getElementById("g-name").focus(), 50);
+}
+function saveNewRoutine() {
+  const name = document.getElementById("g-name").value.trim();
+  if (!name) { alert("Donne un nom à la routine"); return; }
+  addActive({
+    name,
+    category: document.getElementById("g-cat").value.trim(),
+    frequency: document.getElementById("g-freq").value
+  });
+  closeModal();
+}
+
+// ============== DRAG AND DROP ==============
+let dragSrcId = null;
+function dragStart(ev, id) {
+  dragSrcId = id;
+  ev.dataTransfer.effectAllowed = "move";
+  ev.currentTarget.classList.add("dragging");
+}
+function dragOver(ev) {
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = "move";
+  ev.currentTarget.classList.add("drag-over");
+}
+function dragLeave(ev) {
+  ev.currentTarget.classList.remove("drag-over");
+}
+function dragDrop(ev, targetId) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove("drag-over");
+  if (!dragSrcId || dragSrcId === targetId) return;
+  const srcIdx = state.active.findIndex(x => x.id === dragSrcId);
+  const tgtIdx = state.active.findIndex(x => x.id === targetId);
+  if (srcIdx < 0 || tgtIdx < 0) return;
+  const [moved] = state.active.splice(srcIdx, 1);
+  state.active.splice(tgtIdx, 0, moved);
+  saveState();
+  render();
+}
+function dragEnd(ev) {
+  ev.currentTarget.classList.remove("dragging");
+  dragSrcId = null;
+  document.querySelectorAll(".drag-over").forEach(el => el.classList.remove("drag-over"));
+}
+
+// ============== TASK CLICK (rectangles at bottom of week) ==============
+function clickTask(id) {
+  toggleTodo(id);
+}
+
+function openQuickAddTodo(forToday) {
+  window._addTodoForToday = !!forToday;
+  openModal(`
+    <h3>${forToday ? "Tâche pour aujourd'hui" : "Tâche sans date / future"}</h3>
+    <input type="text" id="qa-name" placeholder="Nom de la tâche" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <input list="cat-list-qa" type="text" id="qa-cat" placeholder="Catégorie (optionnel)" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    ${categoryDatalist("cat-list-qa")}
+    ${forToday ? "" : `<input type="date" id="qa-date" min="${todayKey()}" placeholder="Date (optionnel)" style="width:100%;padding:9px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">`}
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitQuickAddTodo()">Ajouter</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+  `);
+  setTimeout(() => { const el = document.getElementById("qa-name"); if (el) el.focus(); }, 50);
+}
+function submitQuickAddTodo() {
+  const name = document.getElementById("qa-name").value.trim();
+  if (!name) { alert("Donne un nom à la tâche"); return; }
+  const cat = document.getElementById("qa-cat").value.trim();
+  const dateInput = document.getElementById("qa-date");
+  const due = window._addTodoForToday ? todayKey() : (dateInput ? dateInput.value : "");
+  addTodo({ name, category: cat, dueDate: due });
+  closeModal();
+}
+
+function openEditTodo(id) {
+  const t = state.todos.find(x => x.id === id);
+  if (!t) return;
+  window._editTodoId = id;
+  openModal(`
+    <h3>Modifier la tâche</h3>
+    <input type="text" id="et-name" value="${escapeAttr(t.name)}" placeholder="Nom" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <input list="cat-list-et" type="text" id="et-cat" value="${escapeAttr(t.category||'')}" placeholder="Catégorie" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    ${categoryDatalist("cat-list-et")}
+    <input type="date" id="et-date" value="${escapeAttr(t.dueDate||'')}" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">Laisse vide pour "sans date"</div>
+    <div style="display:flex;gap:8px;justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="saveEditTodo()">Enregistrer</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      </div>
+      <button class="btn btn-danger" style="background:#fef2f2;color:#ef4444;padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer" onclick="deleteTodoFromModal()">Supprimer</button>
+    </div>
+  `);
+}
+function saveEditTodo() {
+  const id = window._editTodoId;
+  const t = state.todos.find(x => x.id === id);
+  if (!t) return;
+  const name = document.getElementById("et-name").value.trim();
+  if (!name) { alert("Donne un nom à la tâche"); return; }
+  t.name = name;
+  t.category = document.getElementById("et-cat").value.trim();
+  t.dueDate = document.getElementById("et-date").value || "";
+  saveState();
+  closeModal();
+  render();
+}
+function deleteTodoFromModal() {
+  const id = window._editTodoId;
+  if (!confirm("Supprimer cette tâche ?")) return;
+  state.todos = state.todos.filter(x => x.id !== id);
+  saveState();
+  closeModal();
+  render();
+}
+
+// ============== MONTH CALENDAR (planning) ==============
+function getCalendarMonthDays(offset) {
+  const ref = new Date();
+  ref.setMonth(ref.getMonth() + offset);
+  const y = ref.getFullYear(), m = ref.getMonth();
+  const firstOfMonth = new Date(y, m, 1);
+  const lastOfMonth = new Date(y, m + 1, 0);
+  const startDay = (firstOfMonth.getDay() + 6) % 7; // Mon = 0
+  const start = new Date(y, m, 1 - startDay);
+  const endDay = (lastOfMonth.getDay() + 6) % 7;
+  const end = new Date(y, m, lastOfMonth.getDate() + (6 - endDay));
+  const days = [];
+  const cur = new Date(start);
+  while (cur <= end) {
+    days.push({
+      key: dateToKey(cur),
+      num: cur.getDate(),
+      isCurrentMonth: cur.getMonth() === m,
+      isToday: dateToKey(cur) === todayKey()
+    });
+    cur.setDate(cur.getDate() + 1);
+  }
+  return days;
+}
+
+function renderMonthCalendar() {
+  const calDays = getCalendarMonthDays(monthOffset);
+  const headers = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+  let html = `<div class="section">
+    <div class="section-header">
+      <div class="section-title">Mon planning du mois</div>
+      <div class="section-sub">Clique sur un jour pour voir ou ajouter</div>
+    </div>
+    <div class="month-calendar">`;
+  headers.forEach(h => {
+    html += `<div class="cal-header">${h}</div>`;
+  });
+  calDays.forEach(d => {
+    const items = getPlanItems(d.key);
+    const tooltip = items.map(i => (i.done ? "✓ " : "") + i.text).join("\n");
+    html += `<div class="cal-cell ${d.isCurrentMonth ? "" : "other-month"} ${d.isToday ? "is-today" : ""}"
+      onclick="openDayModal('${d.key}')"
+      ${tooltip ? `title="${escapeAttr(tooltip)}"` : ""}>
+      <div class="cal-cell-num">${d.num}</div>
+      <div class="cal-cell-dots">
+        ${items.map(i => `<div class="cal-dot ${i.color ? "color-" + i.color : ""} ${i.done ? "done" : ""}" title="${escapeAttr(i.text)}"></div>`).join("")}
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+// ============== DAY MODAL (planning per day) ==============
+function openDayModal(dateKey) {
+  window._currentDayKey = dateKey;
+  renderDayModal();
+}
+function renderDayModal() {
+  const dateKey = window._currentDayKey;
+  if (!dateKey) return;
+  const items = getPlanItems(dateKey);
+  const dateObj = new Date(dateKey);
+  const dateLabel = dateObj.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const templates = state.planTemplates || [];
+
+  let html = `<h3 style="text-transform:capitalize;margin-bottom:14px">${dateLabel}</h3>`;
+
+  if (items.length > 0) {
+    html += `<div style="margin-bottom:14px">`;
+    items.forEach(item => {
+      const colorClass = item.color ? `color-${item.color}` : "";
+      html += `
+        <div class="plan-item ${item.done ? "done" : ""} ${colorClass}" style="margin-bottom:6px">
+          <div class="plan-item-check ${item.done ? "checked" : ""}" onclick="togglePlanItemModal('${item.id}')"></div>
+          <div class="plan-item-text" onclick="togglePlanItemModal('${item.id}')">${escapeHtml(item.text)}</div>
+          <button class="plan-item-del" onclick="removePlanItemModal('${item.id}')" title="Supprimer">×</button>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div style="text-align:center;color:#94a3b8;padding:8px 0 14px;font-size:13px">Aucune tâche pour ce jour.</div>`;
+  }
+
+  html += `
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <input type="text" id="day-modal-input" placeholder="Nouvelle tâche..."
+        style="flex:1;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:13px;outline:none"
+        onkeydown="if(event.key==='Enter') addDayModalItem()">
+      <button class="btn btn-primary" onclick="addDayModalItem()">+</button>
+    </div>
+  `;
+
+  if (templates.length) {
+    html += `<div style="font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Activités fréquentes</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">`;
+    templates.forEach(t => {
+      const tColor = t.color || "gray";
+      const c = colorById(tColor);
+      const bg = c ? c.bg : "#f1f5f9";
+      const border = c ? c.border : "#cbd5e1";
+      const txt = c ? c.text : "#475569";
+      html += `<button onclick="addTemplateToCurrentDay('${t.id}')"
+        style="background:${bg};border:1px solid ${border};color:${txt};padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ ${escapeHtml(t.name)}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div style="text-align:right"><button class="btn btn-secondary" onclick="closeModal()">Fermer</button></div>`;
+  openModal(html);
+  setTimeout(() => {
+    const input = document.getElementById("day-modal-input");
+    if (input && items.length === 0) input.focus();
+  }, 50);
+}
+function addDayModalItem() {
+  const input = document.getElementById("day-modal-input");
+  if (!input) return;
+  const v = input.value.trim();
+  if (!v) return;
+  if (!state.weeklyPlan) state.weeklyPlan = {};
+  if (!state.weeklyPlan[window._currentDayKey]) state.weeklyPlan[window._currentDayKey] = [];
+  state.weeklyPlan[window._currentDayKey].push({ id: uid(), text: v, done: false });
+  saveState();
+  renderDayModal();
+  // Also refresh background
+  const c = document.getElementById("content");
+  if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "week") c.innerHTML = renderWeek();
+}
+function togglePlanItemModal(itemId) {
+  const list = state.weeklyPlan && state.weeklyPlan[window._currentDayKey];
+  if (!list) return;
+  const it = list.find(x => x.id === itemId);
+  if (!it) return;
+  it.done = !it.done;
+  saveState();
+  renderDayModal();
+  const c = document.getElementById("content");
+  if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "week") c.innerHTML = renderWeek();
+}
+function removePlanItemModal(itemId) {
+  if (!state.weeklyPlan || !state.weeklyPlan[window._currentDayKey]) return;
+  state.weeklyPlan[window._currentDayKey] = state.weeklyPlan[window._currentDayKey].filter(x => x.id !== itemId);
+  saveState();
+  renderDayModal();
+  const c = document.getElementById("content");
+  if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "week") c.innerHTML = renderWeek();
+}
+function addTemplateToCurrentDay(templateId) {
+  const t = (state.planTemplates || []).find(x => x.id === templateId);
+  if (!t) return;
+  if (!state.weeklyPlan) state.weeklyPlan = {};
+  if (!state.weeklyPlan[window._currentDayKey]) state.weeklyPlan[window._currentDayKey] = [];
+  state.weeklyPlan[window._currentDayKey].push({ id: uid(), text: t.name, done: false, color: t.color || null });
+  saveState();
+  renderDayModal();
+  const c = document.getElementById("content");
+  if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "week") c.innerHTML = renderWeek();
+}
+
+// ============== CATEGORIES (groupage routines) ==============
+function toggleCategoryHidden(cat) {
+  if (!Array.isArray(state.hiddenCategories)) state.hiddenCategories = [];
+  if (state.hiddenCategories.includes(cat)) {
+    state.hiddenCategories = state.hiddenCategories.filter(c => c !== cat);
+  } else {
+    state.hiddenCategories.push(cat);
+  }
+  saveState();
+  render();
+}
+function isCategoryHidden(cat) {
+  return Array.isArray(state.hiddenCategories) && state.hiddenCategories.includes(cat);
+}
+function toggleShowAll() {
+  showAllCategories = !showAllCategories;
+  render();
+}
+// Group routines by category, preserving array order within each group
+function groupRoutinesByCategory(routines) {
+  const groups = [];
+  const seen = new Map();
+  routines.forEach(r => {
+    const cat = (r.category && r.category.trim()) ? r.category.trim() : "Sans catégorie";
+    if (!seen.has(cat)) {
+      seen.set(cat, groups.length);
+      groups.push({ category: cat, items: [] });
+    }
+    groups[seen.get(cat)].items.push(r);
+  });
+  return groups;
+}
+
+// ============== SHOPPING ==============
+function ensureShopping() {
+  if (!state.shopping) state.shopping = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping));
+  if (!Array.isArray(state.shopping.courses)) state.shopping.courses = [];
+  if (!Array.isArray(state.shopping.rightLists)) state.shopping.rightLists = JSON.parse(JSON.stringify(DEFAULT_STATE.shopping.rightLists));
+}
+
+function addCoursesItem(text) {
+  ensureShopping();
+  state.shopping.courses.push({ id: uid(), type: "item", text, done: false });
+  saveState();
+  render();
+}
+function addCoursesDivider(label) {
+  ensureShopping();
+  state.shopping.courses.push({ id: uid(), type: "divider", text: label || "Section" });
+  saveState();
+  render();
+}
+function toggleCoursesItem(id) {
+  ensureShopping();
+  const it = state.shopping.courses.find(x => x.id === id);
+  if (!it || it.type !== "item") return;
+  it.done = !it.done;
+  saveState();
+  render();
+}
+function removeCoursesItem(id) {
+  ensureShopping();
+  state.shopping.courses = state.shopping.courses.filter(x => x.id !== id);
+  saveState();
+  render();
+}
+function updateDividerLabel(id, newLabel) {
+  ensureShopping();
+  const d = state.shopping.courses.find(x => x.id === id);
+  if (!d || d.type !== "divider") return;
+  d.text = newLabel.trim() || "Section";
+  saveState();
+  // No re-render: text is already in the DOM and user is editing
+}
+function submitCoursesAdd() {
+  const input = document.getElementById("shop-courses-input");
+  if (!input) return;
+  const v = input.value.trim();
+  if (!v) return;
+  addCoursesItem(v);
+}
+function submitCoursesDivider() {
+  const label = prompt("Nom du séparateur (ex: Marché, Supermarché)", "");
+  if (label === null) return;
+  addCoursesDivider(label || "Section");
+}
+function clearDoneCourses() {
+  ensureShopping();
+  const n = state.shopping.courses.filter(x => x.type === "item" && x.done).length;
+  if (!n) return;
+  if (!confirm(`Effacer les ${n} articles cochés ?`)) return;
+  state.shopping.courses = state.shopping.courses.filter(x => x.type !== "item" || !x.done);
+  saveState();
+  render();
+}
+
+function addRightListItem(listId) {
+  ensureShopping();
+  const list = state.shopping.rightLists.find(l => l.id === listId);
+  if (!list) return;
+  const input = document.getElementById("rl-input-" + listId);
+  if (!input) return;
+  const v = input.value.trim();
+  if (!v) return;
+  list.items.push({ id: uid(), text: v, done: false });
+  saveState();
+  render();
+}
+function toggleRightListItem(listId, itemId) {
+  ensureShopping();
+  const list = state.shopping.rightLists.find(l => l.id === listId);
+  if (!list) return;
+  const it = list.items.find(x => x.id === itemId);
+  if (!it) return;
+  it.done = !it.done;
+  saveState();
+  render();
+}
+function removeRightListItem(listId, itemId) {
+  ensureShopping();
+  const list = state.shopping.rightLists.find(l => l.id === listId);
+  if (!list) return;
+  list.items = list.items.filter(x => x.id !== itemId);
+  saveState();
+  render();
+}
+function updateRightListTitle(listId, newTitle) {
+  ensureShopping();
+  const list = state.shopping.rightLists.find(l => l.id === listId);
+  if (!list) return;
+  list.title = newTitle.trim() || "Liste";
+  saveState();
+}
+function addRightList() {
+  ensureShopping();
+  state.shopping.rightLists.push({ id: uid(), title: "Nouvelle liste", items: [] });
+  saveState();
+  render();
+}
+function removeRightList(listId) {
+  ensureShopping();
+  if (!confirm("Supprimer cette liste et tous ses articles ?")) return;
+  state.shopping.rightLists = state.shopping.rightLists.filter(l => l.id !== listId);
+  saveState();
+  render();
+}
+
+function renderShopping() {
+  ensureShopping();
+  let html = `<div class="shopping-layout">`;
+
+  // LEFT: Courses
+  html += `
+    <div>
+      <div class="shop-card">
+        <h3>Courses
+          <span style="display:flex;gap:4px;align-items:center">
+            ${state.shopping.courses.some(x => x.type === "item" && x.done) ? `<button class="section-plus" onclick="clearDoneCourses()" title="Effacer les cochés" style="font-size:12px">Effacer les cochés</button>` : ""}
+          </span>
+        </h3>
+  `;
+  if (state.shopping.courses.length === 0) {
+    html += `<div class="shop-empty">Vide. Ajoute ton premier article ci-dessous.</div>`;
+  } else {
+    state.shopping.courses.forEach(item => {
+      if (item.type === "divider") {
+        html += `
+          <div class="shop-divider">
+            <input class="shop-divider-edit" value="${escapeAttr(item.text)}" onblur="updateDividerLabel('${item.id}', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
+            <button class="shop-divider-del" onclick="removeCoursesItem('${item.id}')" title="Supprimer">×</button>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="shop-row ${item.done ? "done" : ""}" onclick="toggleCoursesItem('${item.id}')">
+            <div class="shop-row-check"></div>
+            <div class="shop-text">${escapeHtml(item.text)}</div>
+            <button class="shop-row-del" onclick="event.stopPropagation(); removeCoursesItem('${item.id}')" title="Supprimer">×</button>
+          </div>
+        `;
+      }
+    });
+  }
+  html += `
+        <div class="shop-add-row">
+          <input type="text" id="shop-courses-input" placeholder="Ajouter un article…" onkeydown="if(event.key==='Enter') submitCoursesAdd()">
+          <button onclick="submitCoursesAdd()">+ Article</button>
+          <button class="add-divider" onclick="submitCoursesDivider()">+ Séparateur</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // RIGHT: Two (or more) editable lists, stacked vertically
+  html += `<div class="shop-right-stack">`;
+  state.shopping.rightLists.forEach(list => {
+    html += `
+      <div class="shop-card">
+        <h3>
+          <input class="shop-title-edit" value="${escapeAttr(list.title)}" onblur="updateRightListTitle('${list.id}', this.value); render();" onkeydown="if(event.key==='Enter') this.blur()">
+          <button class="shop-row-del" style="opacity:0.6;font-size:13px;margin-left:4px" onclick="removeRightList('${list.id}')" title="Supprimer cette liste">×</button>
+        </h3>
+    `;
+    if (list.items.length === 0) {
+      html += `<div class="shop-empty">Aucun article.</div>`;
+    } else {
+      list.items.forEach(it => {
+        html += `
+          <div class="shop-row ${it.done ? "done" : ""}" onclick="toggleRightListItem('${list.id}','${it.id}')">
+            <div class="shop-row-check"></div>
+            <div class="shop-text">${escapeHtml(it.text)}</div>
+            <button class="shop-row-del" onclick="event.stopPropagation(); removeRightListItem('${list.id}','${it.id}')" title="Supprimer">×</button>
+          </div>
+        `;
+      });
+    }
+    html += `
+        <div class="shop-add-row">
+          <input type="text" id="rl-input-${list.id}" placeholder="Ajouter…" onkeydown="if(event.key==='Enter') addRightListItem('${list.id}')">
+          <button onclick="addRightListItem('${list.id}')">+</button>
+        </div>
+      </div>
+    `;
+  });
+  // Button to add a new list (spans full width of right grid)
+  html += `
+    <div class="shop-right-add">
+      <button class="btn btn-secondary" onclick="addRightList()">+ Nouvelle liste</button>
+    </div>
+  `;
+  html += `</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function streak(activity) {
+  // consecutive days from today backward
+  const completions = state.completions[activity.id] || {};
+  let n = 0;
+  const d = new Date();
+  while (true) {
+    const k = dateToKey(d);
+    if (completions[k]) {
+      n++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      // Allow today to not block streak if not yet done
+      if (n === 0 && k === todayKey()) {
+        d.setDate(d.getDate() - 1);
+        continue;
+      }
+      break;
+    }
+  }
+  return n;
+}
+
+// ================== ACTIONS ==================
+function addActive(data) {
+  state.active.push({
+    id: uid(),
+    name: data.name,
+    category: data.category || "",
+    frequency: data.frequency,
+    createdAt: new Date().toISOString()
+  });
+  saveState();
+  render();
+}
+function addWaiting(data) {
+  state.waiting.push({
+    id: uid(),
+    name: data.name,
+    category: data.category || "",
+    note: data.note || "",
+    createdAt: new Date().toISOString()
+  });
+  saveState();
+  render();
+}
+function addTodo(data) {
+  state.todos.push({
+    id: uid(),
+    name: data.name,
+    category: data.category || "",
+    dueDate: data.dueDate || "",
+    done: false,
+    createdAt: new Date().toISOString()
+  });
+  saveState();
+  render();
+}
+function removeItem(list, id) {
+  if (!confirm("Supprimer cet élément ?")) return;
+  state[list] = state[list].filter(x => x.id !== id);
+  if (list === "active") delete state.completions[id];
+  saveState();
+  render();
+}
+function promoteToActive(id) {
+  const item = state.waiting.find(x => x.id === id);
+  if (!item) return;
+  openModal(renderAddActiveForm({
+    name: item.name,
+    category: item.category,
+    onSave: (data) => {
+      addActive(data);
+      state.waiting = state.waiting.filter(x => x.id !== id);
+      saveState();
+      closeModal();
+      view = "manage";
+      render();
+    }
+  }));
+}
+function demoteToWaiting(id) {
+  const item = state.active.find(x => x.id === id);
+  if (!item) return;
+  state.waiting.push({
+    id: uid(),
+    name: item.name,
+    category: item.category,
+    note: "Précédemment routine active",
+    createdAt: new Date().toISOString()
+  });
+  state.active = state.active.filter(x => x.id !== id);
+  delete state.completions[id];
+  saveState();
+  render();
+}
+function toggleTodo(id) {
+  const t = state.todos.find(x => x.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  if (t.done) t.doneAt = new Date().toISOString();
+  saveState();
+  render();
+}
+
+// ================== RENDER ==================
+function render() {
+  document.getElementById("today").textContent = formatToday();
+  const totalItems = state.active.length + state.waiting.length + state.todos.filter(t => !t.done).length;
+  document.getElementById("badge-total").textContent = totalItems;
+  document.querySelectorAll(".tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.view === view);
+  });
+  const c = document.getElementById("content");
+  if (view === "week") c.innerHTML = renderWeek();
+  else if (view === "month") c.innerHTML = renderMonth();
+  else if (view === "manage") c.innerHTML = renderManage();
+  else if (view === "shopping") c.innerHTML = renderShopping();
+  else if (view === "settings") c.innerHTML = renderSettings();
+  else c.innerHTML = renderWeek();
+}
+
+function renderManage() {
+  return renderActiveSection() + renderWaitingSection() + renderTodosTodaySection() + renderTodosNoDateSection();
+}
+
+function renderActiveSection() {
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Mes routines actives <span class="section-sub">${state.active.length}</span></div>
+        <button class="btn btn-primary" onclick="toggleAddForm('add-active')">+ Ajouter</button>
+      </div>
+      <div class="add-form" id="add-active">
+        <input type="text" id="active-name" placeholder="Nom de la routine (ex: Méditation, Footing)">
+        <div class="form-row">
+          <input list="cat-list-active" type="text" id="active-cat" placeholder="Catégorie">
+          ${categoryDatalist("cat-list-active")}
+          <select id="active-freq">
+            ${FREQUENCIES.map(f => `<option value="${f.id}">${f.label}</option>`).join("")}
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="submitActive()">Ajouter</button>
+          <button class="btn btn-secondary" onclick="toggleAddForm('add-active')">Annuler</button>
+        </div>
+      </div>
+  `;
+  if (state.active.length === 0) {
+    html += `<div class="empty">Aucune routine pour l'instant. Clique sur "+ Ajouter" pour commencer.</div>`;
+  } else {
+    state.active.forEach(a => {
+      const freq = getFrequency(a.frequency);
+      const prog = progress(a);
+      html += `
+        <div class="item">
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(a.name)}</div>
+            <div class="item-meta">
+              ${a.category ? `<span class="tag tag-cat">${escapeHtml(a.category)}</span>` : ""}
+              <span class="tag tag-freq">${escapeHtml(freq.label)}</span>
+              <span class="tag tag-prog ${prog.done >= prog.target ? "full" : ""}">${prog.done}/${prog.target}</span>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Mettre en attente" onclick="demoteToWaiting('${a.id}')">⇣</button>
+            <button class="btn-danger" onclick="removeItem('active','${a.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderWaitingSection() {
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Routines en attente / plus tard <span class="section-sub">${state.waiting.length}</span></div>
+        <button class="btn btn-primary" onclick="toggleAddForm('add-waiting')">+ Ajouter</button>
+      </div>
+      <div class="add-form" id="add-waiting">
+        <input type="text" id="waiting-name" placeholder="Nom de l'activité">
+        <div class="form-row">
+          <input list="cat-list-waiting" type="text" id="waiting-cat" placeholder="Catégorie">
+          ${categoryDatalist("cat-list-waiting")}
+          <input type="text" id="waiting-note" placeholder="Note (optionnel)">
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="submitWaiting()">Ajouter</button>
+          <button class="btn btn-secondary" onclick="toggleAddForm('add-waiting')">Annuler</button>
+        </div>
+      </div>
+  `;
+  if (state.waiting.length === 0) {
+    html += `<div class="empty">Note ici les activités que tu veux essayer plus tard.</div>`;
+  } else {
+    state.waiting.forEach(w => {
+      html += `
+        <div class="item">
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(w.name)}</div>
+            <div class="item-meta">
+              ${w.category ? `<span class="tag tag-cat">${escapeHtml(w.category)}</span>` : ""}
+              ${w.note ? `<span style="color:#94a3b8">${escapeHtml(w.note)}</span>` : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Passer en routine active" onclick="promoteToActive('${w.id}')">⇡</button>
+            <button class="btn-danger" onclick="removeItem('waiting','${w.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderTodosTodaySection() {
+  const todays = state.todos.filter(t => !t.done && (t.dueDate === todayKey() || (t.dueDate && t.dueDate < todayKey())));
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Tâches pour aujourd'hui <span class="section-sub">${todays.length}</span></div>
+        <button class="btn btn-primary" onclick="toggleAddForm('add-todo-today')">+ Ajouter</button>
+      </div>
+      <div class="add-form" id="add-todo-today">
+        <input type="text" id="todo-today-name" placeholder="Que veux-tu faire aujourd'hui ?">
+        <input list="cat-list-todo-today" type="text" id="todo-today-cat" placeholder="Catégorie (optionnel)">
+        ${categoryDatalist("cat-list-todo-today")}
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="submitTodoToday()">Ajouter</button>
+          <button class="btn btn-secondary" onclick="toggleAddForm('add-todo-today')">Annuler</button>
+        </div>
+      </div>
+  `;
+  if (todays.length === 0) {
+    html += `<div class="empty">Aucune tâche pour aujourd'hui.</div>`;
+  } else {
+    todays.forEach(t => {
+      html += `
+        <div class="item">
+          <div class="item-check" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(t.name)}</div>
+            <div class="item-meta">
+              ${t.category ? `<span class="tag tag-cat">${escapeHtml(t.category)}</span>` : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Retirer de la date" onclick="clearDueDate('${t.id}')">⇣</button>
+            <button class="btn-danger" onclick="removeItem('todos','${t.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderTodosNoDateSection() {
+  const noDate = state.todos.filter(t => !t.done && (!t.dueDate || t.dueDate > todayKey()));
+  const done = state.todos.filter(t => t.done);
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Tâches sans date <span class="section-sub">${noDate.length}</span></div>
+        <button class="btn btn-primary" onclick="toggleAddForm('add-todo-nodate')">+ Ajouter</button>
+      </div>
+      <div class="add-form" id="add-todo-nodate">
+        <input type="text" id="todo-nodate-name" placeholder="Que veux-tu ne pas oublier ?">
+        <div class="form-row">
+          <input list="cat-list-todo-nodate" type="text" id="todo-nodate-cat" placeholder="Catégorie (optionnel)">
+          ${categoryDatalist("cat-list-todo-nodate")}
+          <input type="date" id="todo-nodate-due" min="${todayKey()}">
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="submitTodoNoDate()">Ajouter</button>
+          <button class="btn btn-secondary" onclick="toggleAddForm('add-todo-nodate')">Annuler</button>
+        </div>
+      </div>
+  `;
+  if (noDate.length === 0) {
+    html += `<div class="empty">Aucune tâche sans date.</div>`;
+  } else {
+    noDate.sort((a,b) => (a.dueDate || "9999") < (b.dueDate || "9999") ? -1 : 1);
+    noDate.forEach(t => {
+      html += `
+        <div class="item">
+          <div class="item-check" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(t.name)}</div>
+            <div class="item-meta">
+              ${t.category ? `<span class="tag tag-cat">${escapeHtml(t.category)}</span>` : ""}
+              ${t.dueDate ? `<span class="tag">Pour le ${t.dueDate}</span>` : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Mettre pour aujourd'hui" onclick="setDueToday('${t.id}')">⇡</button>
+            <button class="btn-danger" onclick="removeItem('todos','${t.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  if (done.length) {
+    html += `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">Récemment faits <span class="section-sub">${done.length}</span></div>
+          <button class="btn btn-secondary" onclick="clearDoneTodos()">Tout effacer</button>
+        </div>
+    `;
+    done.slice().reverse().slice(0, 10).forEach(t => {
+      html += `
+        <div class="item">
+          <div class="item-check checked" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title done">${escapeHtml(t.name)}</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+// ================== WEEK VIEW ==================
+function getWeekDays(offset) {
+  const d = new Date();
+  const day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day + offset * 7);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const di = new Date(d.getTime() + i * 86400000);
+    const k = dateToKey(di);
+    days.push({
+      key: k,
+      label: ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"][i],
+      num: di.getDate(),
+      isWeekend: i >= 5,
+      isToday: k === todayKey()
+    });
+  }
+  return days;
+}
+
+function weekRangeLabel(offset) {
+  const days = getWeekDays(offset);
+  const first = new Date(days[0].key);
+  const last = new Date(days[6].key);
+  const opts = { day: "numeric", month: "short" };
+  return `${first.toLocaleDateString("fr-FR", opts)} → ${last.toLocaleDateString("fr-FR", opts)}`;
+}
+
+function smileyFor(doneCount, totalCount) {
+  if (totalCount === 0) return `<span class="smiley-empty">—</span>`;
+  if (doneCount === 0) return `<span class="smiley-empty">·</span>`;
+  const ratio = doneCount / totalCount;
+  if (ratio >= 1) return "😄";
+  if (ratio >= 0.66) return "🙂";
+  if (ratio >= 0.33) return "😐";
+  return "😶";
+}
+
+function renderWeekPlanBoard(days) {
+  const templates = state.planTemplates || [];
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Mon planning de la semaine <button class="section-plus" onclick="toggleTemplatesPanel()" title="Activités fréquentes">+</button></div>
+        <div class="section-sub">Note ce que tu veux faire chaque jour</div>
+      </div>
+  `;
+  if (showTemplates) {
+    html += `<div class="templates-panel">
+      <div class="templates-hint">Activités fréquentes — clique sur un jour pour ajouter au planning.</div>`;
+    templates.forEach(t => {
+      const tColor = t.color || "gray";
+      html += `
+        <div class="template-card color-${tColor}">
+          <span class="template-card-name">${escapeHtml(t.name)}</span>
+          <div class="color-picker">
+            ${TEMPLATE_COLORS.map(c => `<div class="color-dot ${tColor === c.id ? "selected" : ""}" style="background:${c.bg};border-color:${tColor === c.id ? "#0f172a" : c.border}" onclick="setTemplateColor('${t.id}','${c.id}')" title="${c.id}"></div>`).join("")}
+          </div>
+          <div class="template-day-buttons">
+            ${days.map(d => `<button class="template-day-btn" onclick="addTemplateToDay('${t.id}','${d.key}')" title="Ajouter au ${d.label} ${d.num}">${d.label}</button>`).join("")}
+          </div>
+          <button class="template-del-btn" onclick="removePlanTemplate('${t.id}')" title="Supprimer ce raccourci">×</button>
+        </div>
+      `;
+    });
+    html += `
+      <div class="template-add-row">
+        <input type="text" id="new-tpl-name" placeholder="Nom de l'activité (Sport, Courses, Poterie...)" onkeydown="if(event.key==='Enter') addPlanTemplate()">
+        <button class="btn btn-secondary" onclick="addPlanTemplate()">+ Ajouter</button>
+      </div>
+    </div>`;
+  }
+  html += `<div class="week-plan">`;
+  days.forEach(d => {
+    const items = getPlanItems(d.key);
+    html += `
+      <div class="plan-day ${d.isToday ? "is-today" : ""} ${d.isWeekend ? "is-weekend" : ""}" data-day="${d.key}" onclick="openDayModal('${d.key}')" title="Cliquer pour ajouter ou éditer">
+        <div class="plan-day-header"><span class="plan-day-label">${d.label}</span><span class="plan-day-num">${d.num}</span></div>
+        <div class="plan-items">
+    `;
+    items.forEach(item => {
+      const colorClass = item.color ? `color-${item.color}` : "";
+      html += `
+        <div class="plan-item ${item.done ? "done" : ""} ${colorClass}" style="cursor:pointer">
+          <div class="plan-item-check ${item.done ? "checked" : ""}"></div>
+          <div class="plan-item-text">${escapeHtml(item.text)}</div>
+        </div>
+      `;
+    });
+    html += `
+        </div>
+        <button class="plan-add" onclick="event.stopPropagation(); openDayModal('${d.key}')">+ Ajouter</button>
+      </div>
+    `;
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+function renderTaskRectangles() {
+  const today = todayKey();
+  // Left: today and overdue (rolls over)
+  const todayList = state.todos.filter(t => t.dueDate && t.dueDate <= today);
+  // Right: future-dated or no date
+  const laterList = state.todos.filter(t => !t.dueDate || t.dueDate > today);
+  todayList.sort((a, b) => (a.done === b.done) ? 0 : (a.done ? 1 : -1));
+  laterList.sort((a, b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (a.dueDate || "9999") < (b.dueDate || "9999") ? -1 : 1;
+  });
+
+  function renderList(list, emptyMsg) {
+    if (list.length === 0) return `<div class="empty-small">${emptyMsg}</div>`;
+    return list.map(t => `
+      <div class="task-line ${t.done ? "done" : ""}" onclick="clickTask('${t.id}')">
+        <span class="task-line-text">${escapeHtml(t.name)}${t.category ? `<span class="task-line-cat">${escapeHtml(t.category)}</span>` : ""}</span>
+        ${t.dueDate && t.dueDate !== today ? `<span class="task-line-meta">${t.dueDate}</span>` : ""}
+        <button class="task-line-edit" onclick="event.stopPropagation(); openEditTodo('${t.id}')" title="Modifier">✎</button>
+        <button class="task-line-del" onclick="event.stopPropagation(); removeItem('todos','${t.id}')" title="Supprimer">×</button>
+      </div>
+    `).join("");
+  }
+
+  return `
+    <div class="task-rectangles">
+      <div class="task-rect">
+        <h4>Pour aujourd'hui <span style="display:flex;align-items:center;gap:6px"><span class="count">${todayList.filter(t => !t.done).length}</span><button class="section-plus" onclick="openQuickAddTodo(true)" title="Ajouter une tâche pour aujourd'hui">+</button></span></h4>
+        ${renderList(todayList, "Rien pour aujourd'hui.")}
+      </div>
+      <div class="task-rect">
+        <h4>Autres dates / sans date <span style="display:flex;align-items:center;gap:6px"><span class="count">${laterList.filter(t => !t.done).length}</span><button class="section-plus" onclick="openQuickAddTodo(false)" title="Ajouter une tâche sans date">+</button></span></h4>
+        ${renderList(laterList, "Aucune tâche en réserve.")}
+      </div>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;text-align:center;margin-top:8px">
+      Clique sur une tâche pour la barrer. ✎ pour modifier (nom, catégorie, date). Les tâches non faites du jour restent automatiquement le lendemain.
+    </div>
+  `;
+}
+
+function renderWeek() {
+  const days = getWeekDays(weekOffset);
+  const today = todayKey();
+
+  // Sort: perfect routines go to bottom, keep original order otherwise
+  const sortedActive = state.active.slice().sort((a, b) => {
+    const fa = getFrequency(a.frequency).target;
+    const fb = getFrequency(b.frequency).target;
+    const ca = state.completions[a.id] || {};
+    const cb = state.completions[b.id] || {};
+    const da = days.filter(d => ca[d.key]).length;
+    const db = days.filter(d => cb[d.key]).length;
+    const pa = da >= fa ? 1 : 0;
+    const pb = db >= fb ? 1 : 0;
+    return pa - pb;
+  });
+
+  let html = renderWeekPlanBoard(days);
+
+  if (state.active.length === 0) {
+    html += `<div class="section">
+      <div class="section-header">
+        <div class="section-title">Mes routines <button class="section-plus" onclick="addRoutineFromGrid()" title="Nouvelle routine">+</button></div>
+      </div>
+      <div class="empty">Aucune routine pour l'instant. Clique sur le + pour commencer.</div>
+    </div>`;
+    html += renderTaskRectangles();
+    return html;
+  }
+
+  html += `
+    <div class="grid-wrap">
+      <div class="grid-nav">
+        <button onclick="weekOffset--; render();">← Précédente</button>
+        <div class="grid-nav-title">
+          Semaine du ${weekRangeLabel(weekOffset)}${weekOffset === 0 ? " (en cours)" : ""}
+          ${weekOffset !== 0 ? `<button class="section-plus" style="font-size:12px;margin-left:8px" onclick="weekOffset=0; render();" title="Revenir à cette semaine">↺ aujourd'hui</button>` : ""}
+        </div>
+        <button onclick="weekOffset++; render();">Suivante →</button>
+      </div>
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th class="task-col">Routine <button class="header-plus" onclick="addRoutineFromGrid()" title="Nouvelle routine">+</button></th>
+            ${days.map(d => `<th class="${d.isToday ? "day-today" : ""}${d.isWeekend ? " weekend" : ""}">${d.label}<br><span class="month-day-num">${d.num}</span></th>`).join("")}
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  const colSpan = days.length + 2;
+  const groups = groupRoutinesByCategory(sortedActive);
+  let hiddenCount = 0;
+  groups.forEach(group => {
+    const hidden = isCategoryHidden(group.category);
+    if (hidden && !showAllCategories) {
+      hiddenCount++;
+      return;
+    }
+    html += `<tr class="category-header ${hidden ? "is-hidden" : ""}">
+      <td colspan="${colSpan}">
+        ${escapeHtml(group.category)} <span style="opacity:0.6;font-weight:400;text-transform:none;letter-spacing:0">(${group.items.length})</span>
+        <span class="cat-actions">
+          <button class="cat-hide-btn" data-cat="${escapeAttr(group.category)}" onclick="toggleCategoryHidden(this.dataset.cat)" title="${hidden ? "Réafficher" : "Cacher dans la vue Semaine/Mois"}">${hidden ? "afficher" : "cacher"}</button>
+        </span>
+      </td>
+    </tr>`;
+    group.items.forEach(a => {
+      const completions = state.completions[a.id] || {};
+      let doneInWeek = 0;
+      const target = getFrequency(a.frequency).target;
+      days.forEach(d => { if (completions[d.key]) doneInWeek++; });
+      const perfect = doneInWeek >= target;
+      html += `<tr class="${perfect ? "row-perfect" : ""}" draggable="true"
+        ondragstart="dragStart(event,'${a.id}')"
+        ondragover="dragOver(event)"
+        ondragleave="dragLeave(event)"
+        ondrop="dragDrop(event,'${a.id}')"
+        ondragend="dragEnd(event)">
+        <td class="task-cell">
+          <span class="drag-handle" title="Glisser pour réordonner">⋮⋮</span>
+          ${escapeHtml(a.name)}
+          <button class="routine-edit-icon" onclick="editRoutine('${a.id}')" title="Modifier">✎</button>
+        </td>`;
+      days.forEach(d => {
+        const done = !!completions[d.key];
+        const isFuture = d.key > today;
+        html += `<td class="${d.isToday ? "day-today" : ""}">
+          <div class="cell-box ${done ? "checked" : ""} ${isFuture ? "future" : ""}"
+               onclick="${isFuture ? "" : `toggleDay('${a.id}','${d.key}')`}"></div>
+        </td>`;
+      });
+      const targetLabel = getFrequency(a.frequency).period === "week" ? `/${target}` : "";
+      html += `<td><span class="tag tag-prog ${perfect ? "full" : ""}">${doneInWeek}${targetLabel}</span></td>`;
+      html += `</tr>`;
+    });
+  });
+
+  html += `</tbody></table></div>`;
+
+  // Show-all toggle if there are hidden categories
+  const totalHidden = (state.hiddenCategories || []).filter(c => groups.some(g => g.category === c)).length;
+  if (totalHidden > 0) {
+    html += `<button class="show-all-btn" onclick="toggleShowAll()">${showAllCategories ? "↑ masquer les catégories cachées" : `↓ voir tout (${totalHidden} catégorie${totalHidden > 1 ? "s" : ""} masquée${totalHidden > 1 ? "s" : ""})`}</button>`;
+  }
+
+  html += `
+    <div style="font-size:12px;color:#64748b;line-height:1.6;margin:8px 0 16px;padding:0 4px">
+      Clique sur une case pour cocher. ✎ pour modifier ou supprimer une routine. ⋮⋮ pour glisser et réordonner.
+    </div>
+  `;
+
+  html += renderTaskRectangles();
+
+  return html;
+}
+
+// ================== MONTH VIEW ==================
+function getMonthDays(offset) {
+  const ref = new Date();
+  ref.setMonth(ref.getMonth() + offset);
+  const y = ref.getFullYear(), m = ref.getMonth();
+  const last = new Date(y, m + 1, 0).getDate();
+  const days = [];
+  for (let i = 1; i <= last; i++) {
+    const di = new Date(y, m, i);
+    const idx = (di.getDay() + 6) % 7;
+    const k = dateToKey(di);
+    days.push({
+      key: k,
+      num: i,
+      label: ["L","M","M","J","V","S","D"][idx],
+      isWeekend: idx >= 5,
+      isToday: k === todayKey()
+    });
+  }
+  return days;
+}
+
+function monthLabel(offset) {
+  const ref = new Date();
+  ref.setMonth(ref.getMonth() + offset);
+  return ref.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+}
+
+function renderMonth() {
+  const days = getMonthDays(monthOffset);
+  const today = todayKey();
+
+  // Compute monthly target per routine — toujours 4 semaines par convention
+  const WEEKS_PER_MONTH = 4;
+  function monthlyTarget(a) {
+    const freq = getFrequency(a.frequency);
+    if (freq.period === "month") return freq.target;
+    if (freq.period === "2week") return freq.target * 2;
+    return freq.target * WEEKS_PER_MONTH;
+  }
+
+  // Sort perfect to bottom
+  const sortedActive = state.active.slice().sort((a, b) => {
+    const ca = state.completions[a.id] || {};
+    const cb = state.completions[b.id] || {};
+    const da = days.filter(d => ca[d.key]).length;
+    const db = days.filter(d => cb[d.key]).length;
+    const pa = da >= monthlyTarget(a) ? 1 : 0;
+    const pb = db >= monthlyTarget(b) ? 1 : 0;
+    return pa - pb;
+  });
+
+  let html = `
+    <div class="grid-nav" style="padding:0 4px;margin-bottom:12px">
+      <button onclick="monthOffset--; render();">← Précédent</button>
+      <div class="grid-nav-title" style="text-transform:capitalize">
+        ${monthLabel(monthOffset)}${monthOffset === 0 ? " (en cours)" : ""}
+        ${monthOffset !== 0 ? `<button class="section-plus" style="font-size:12px;margin-left:8px;text-transform:none" onclick="monthOffset=0; render();" title="Revenir à ce mois">↺ aujourd'hui</button>` : ""}
+      </div>
+      <button onclick="monthOffset++; render();">Suivant →</button>
+    </div>
+  `;
+  html += renderMonthCalendar();
+  html += `
+    <div class="grid-wrap">
+  `;
+
+  if (state.active.length === 0) {
+    html += `<div class="empty">Aucune routine pour l'instant. Va dans l'onglet Semaine pour en ajouter.</div></div>`;
+    return html;
+  }
+
+  html += `
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th class="task-col">Routine <button class="header-plus" onclick="addRoutineFromGrid()" title="Nouvelle routine">+</button></th>
+            ${days.map(d => `<th class="${d.isToday ? "day-today" : ""}${d.isWeekend ? " weekend" : ""}"><span class="month-day-num">${d.label}</span><br>${d.num}</th>`).join("")}
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  let perfectRows = 0;
+  const colSpanM = days.length + 2;
+  const groups = groupRoutinesByCategory(sortedActive);
+  let hiddenCountM = 0;
+  groups.forEach(group => {
+    const hidden = isCategoryHidden(group.category);
+    if (hidden && !showAllCategories) {
+      hiddenCountM++;
+      return;
+    }
+    html += `<tr class="category-header ${hidden ? "is-hidden" : ""}">
+      <td colspan="${colSpanM}">
+        ${escapeHtml(group.category)} <span style="opacity:0.6;font-weight:400;text-transform:none;letter-spacing:0">(${group.items.length})</span>
+        <span class="cat-actions">
+          <button class="cat-hide-btn" data-cat="${escapeAttr(group.category)}" onclick="toggleCategoryHidden(this.dataset.cat)" title="${hidden ? "Réafficher" : "Cacher"}">${hidden ? "afficher" : "cacher"}</button>
+        </span>
+      </td>
+    </tr>`;
+    group.items.forEach(a => {
+      const completions = state.completions[a.id] || {};
+      let doneInMonth = 0;
+      days.forEach(d => { if (completions[d.key]) doneInMonth++; });
+      const target = monthlyTarget(a);
+      const perfect = doneInMonth >= target;
+      if (perfect) perfectRows++;
+      html += `<tr class="${perfect ? "row-perfect" : ""}" draggable="true"
+        ondragstart="dragStart(event,'${a.id}')"
+        ondragover="dragOver(event)"
+        ondragleave="dragLeave(event)"
+        ondrop="dragDrop(event,'${a.id}')"
+        ondragend="dragEnd(event)">
+        <td class="task-cell">
+          <span class="drag-handle" title="Glisser pour réordonner">⋮⋮</span>
+          ${escapeHtml(a.name)}
+          <button class="routine-edit-icon" onclick="editRoutine('${a.id}')" title="Modifier">✎</button>
+        </td>`;
+      days.forEach(d => {
+        const done = !!completions[d.key];
+        const isFuture = d.key > today;
+        html += `<td class="${d.isToday ? "day-today" : ""}">
+          <div class="cell-box ${done ? "checked" : ""} ${isFuture ? "future" : ""}"
+               onclick="${isFuture ? "" : `toggleDay('${a.id}','${d.key}')`}"></div>
+        </td>`;
+      });
+      html += `<td><span class="tag tag-prog ${perfect ? "full" : ""}">${doneInMonth}/${target}</span></td>`;
+      html += `</tr>`;
+    });
+  });
+
+  html += `</tbody></table></div>`;
+  const totalHiddenM = (state.hiddenCategories || []).filter(c => groups.some(g => g.category === c)).length;
+  if (totalHiddenM > 0) {
+    html += `<button class="show-all-btn" onclick="toggleShowAll()">${showAllCategories ? "↑ masquer les catégories cachées" : `↓ voir tout (${totalHiddenM} catégorie${totalHiddenM > 1 ? "s" : ""} masquée${totalHiddenM > 1 ? "s" : ""})`}</button>`;
+  }
+  html += renderTaskRectangles();
+  return html;
+}
+
+function renderToday() {
+  const total = state.active.length;
+  const doneCount = state.active.filter(a => doneToday(a)).length;
+  const pendingTodos = state.todos.filter(t => !t.done);
+  const overdue = pendingTodos.filter(t => t.dueDate && t.dueDate < todayKey()).length;
+  const dueToday = pendingTodos.filter(t => t.dueDate === todayKey()).length;
+
+  let html = `
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value">${doneCount}/${total}</div>
+        <div class="stat-label">Routines du jour</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">${dueToday}</div>
+        <div class="stat-label">Tâches d'aujourd'hui</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">${overdue}</div>
+        <div class="stat-label">En retard</div>
+      </div>
+    </div>
+  `;
+
+  // Routines à faire aujourd'hui
+  html += `<div class="section"><div class="section-header"><div class="section-title">Routines à faire aujourd'hui</div></div>`;
+  if (state.active.length === 0) {
+    html += `<div class="empty">Aucune routine active. Ajoute-en dans l'onglet Routines.</div>`;
+  } else {
+    state.active.forEach(a => {
+      const prog = progress(a);
+      const done = doneToday(a);
+      const freq = getFrequency(a.frequency);
+      const periodLabel = freq.period === "week" ? "cette semaine" : freq.period === "2week" ? "ces 2 semaines" : "ce mois";
+      const progClass = prog.done >= prog.target ? "full" : "";
+      const st = streak(a);
+      html += `
+        <div class="item">
+          <div class="item-check ${done ? "checked" : ""}" onclick='toggleToday(${JSON.stringify(a)})'></div>
+          <div class="item-main">
+            <div class="item-title ${done ? "done" : ""}">${escapeHtml(a.name)}</div>
+            <div class="item-meta">
+              ${a.category ? `<span class="tag tag-cat">${escapeHtml(a.category)}</span>` : ""}
+              <span class="tag tag-freq">${escapeHtml(freq.label)}</span>
+              <span class="tag tag-prog ${progClass}">${prog.done}/${prog.target} ${periodLabel}</span>
+              ${st > 1 ? `<span class="tag tag-streak">${st} jours d'affilée</span>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  // Tâches du jour
+  const todaysTodos = pendingTodos.filter(t => !t.dueDate || t.dueDate <= todayKey());
+  if (todaysTodos.length) {
+    html += `<div class="section"><div class="section-header"><div class="section-title">Tâches à traiter aujourd'hui</div></div>`;
+    todaysTodos.forEach(t => {
+      const late = t.dueDate && t.dueDate < todayKey();
+      html += `
+        <div class="item">
+          <div class="item-check" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(t.name)}</div>
+            <div class="item-meta">
+              ${t.category ? `<span class="tag tag-cat">${escapeHtml(t.category)}</span>` : ""}
+              ${t.dueDate ? `<span class="tag ${late ? "tag-freq" : ""}">${late ? "En retard depuis " : "Pour le "}${t.dueDate}</span>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderActive() {
+  let html = `
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="toggleAddForm('add-active')">+ Nouvelle routine</button>
+    </div>
+    <div class="add-form" id="add-active">
+      <input type="text" id="active-name" placeholder="Nom de la routine (ex: Méditation, Footing)">
+      <div class="form-row">
+        <input type="text" id="active-cat" placeholder="Catégorie (Sport, Santé...)">
+        <select id="active-freq">
+          ${FREQUENCIES.map(f => `<option value="${f.id}">${f.label}</option>`).join("")}
+        </select>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitActive()">Ajouter</button>
+        <button class="btn btn-secondary" onclick="toggleAddForm('add-active')">Annuler</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Mes routines actives</div>
+        <div class="section-sub">${state.active.length} routine${state.active.length > 1 ? "s" : ""}</div>
+      </div>
+  `;
+  if (state.active.length === 0) {
+    html += `<div class="empty">Aucune routine pour l'instant. Clique sur "+ Nouvelle routine" pour commencer.</div>`;
+  } else {
+    state.active.forEach(a => {
+      const freq = getFrequency(a.frequency);
+      const prog = progress(a);
+      html += `
+        <div class="item">
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(a.name)}</div>
+            <div class="item-meta">
+              ${a.category ? `<span class="tag tag-cat">${escapeHtml(a.category)}</span>` : ""}
+              <span class="tag tag-freq">${escapeHtml(freq.label)}</span>
+              <span class="tag tag-prog ${prog.done >= prog.target ? "full" : ""}">${prog.done}/${prog.target}</span>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Mettre en attente" onclick="demoteToWaiting('${a.id}')">⇣</button>
+            <button class="btn-danger" onclick="removeItem('active','${a.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderWaiting() {
+  let html = `
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="toggleAddForm('add-waiting')">+ Nouvelle idée</button>
+    </div>
+    <div class="add-form" id="add-waiting">
+      <input type="text" id="waiting-name" placeholder="Nom de l'activité">
+      <div class="form-row">
+        <input type="text" id="waiting-cat" placeholder="Catégorie">
+        <input type="text" id="waiting-note" placeholder="Note (optionnel)">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitWaiting()">Ajouter</button>
+        <button class="btn btn-secondary" onclick="toggleAddForm('add-waiting')">Annuler</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">En attente / plus tard</div>
+        <div class="section-sub">${state.waiting.length} idée${state.waiting.length > 1 ? "s" : ""}</div>
+      </div>
+  `;
+  if (state.waiting.length === 0) {
+    html += `<div class="empty">Aucune activité en attente. Note ici ce que tu veux essayer plus tard.</div>`;
+  } else {
+    state.waiting.forEach(w => {
+      html += `
+        <div class="item">
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(w.name)}</div>
+            <div class="item-meta">
+              ${w.category ? `<span class="tag tag-cat">${escapeHtml(w.category)}</span>` : ""}
+              ${w.note ? `<span style="color:#94a3b8">${escapeHtml(w.note)}</span>` : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-icon" title="Passer en routine active" onclick="promoteToActive('${w.id}')">⇡</button>
+            <button class="btn-danger" onclick="removeItem('waiting','${w.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+function renderTodos() {
+  const pending = state.todos.filter(t => !t.done);
+  const done = state.todos.filter(t => t.done);
+  let html = `
+    <div class="toolbar">
+      <button class="btn btn-primary" onclick="toggleAddForm('add-todo')">+ Nouvelle tâche</button>
+      ${done.length ? `<button class="btn btn-secondary" onclick="clearDoneTodos()">Effacer les ${done.length} faits</button>` : ""}
+    </div>
+    <div class="add-form" id="add-todo">
+      <input type="text" id="todo-name" placeholder="Que veux-tu ne pas oublier ?">
+      <div class="form-row">
+        <input type="text" id="todo-cat" placeholder="Catégorie (optionnel)">
+        <input type="date" id="todo-due">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="submitTodo()">Ajouter</button>
+        <button class="btn btn-secondary" onclick="toggleAddForm('add-todo')">Annuler</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">À faire (ponctuel)</div>
+        <div class="section-sub">${pending.length} à faire</div>
+      </div>
+  `;
+  if (pending.length === 0) {
+    html += `<div class="empty">Tout est traité. Ajoute une tâche ponctuelle si besoin.</div>`;
+  } else {
+    pending.sort((a,b) => (a.dueDate || "9999") < (b.dueDate || "9999") ? -1 : 1);
+    pending.forEach(t => {
+      const late = t.dueDate && t.dueDate < todayKey();
+      html += `
+        <div class="item">
+          <div class="item-check" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title">${escapeHtml(t.name)}</div>
+            <div class="item-meta">
+              ${t.category ? `<span class="tag tag-cat">${escapeHtml(t.category)}</span>` : ""}
+              ${t.dueDate ? `<span class="tag ${late ? "tag-freq" : ""}">${late ? "En retard : " : "Pour le "}${t.dueDate}</span>` : ""}
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="btn-danger" onclick="removeItem('todos','${t.id}')">Supprimer</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  if (done.length) {
+    html += `<div class="section"><div class="section-header"><div class="section-title">Récemment faits</div><div class="section-sub">${done.length}</div></div>`;
+    done.slice().reverse().slice(0, 10).forEach(t => {
+      html += `
+        <div class="item">
+          <div class="item-check checked" onclick="toggleTodo('${t.id}')"></div>
+          <div class="item-main">
+            <div class="item-title done">${escapeHtml(t.name)}</div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderSettings() {
+  const dataStr = JSON.stringify(state, null, 2);
+  const bytes = new Blob([dataStr]).size;
+  const ghStatusLabel = {
+    local: "Désactivé — données seulement locales",
+    synced: "Activé et synchronisé ✓",
+    syncing: "Synchronisation en cours…",
+    error: "Erreur — clique sur l'indicateur en haut à droite"
+  }[ghStatus];
+  return `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Synchronisation GitHub (entre appareils)</div>
+      </div>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px">
+        Synchronise automatiquement tes données entre tous tes appareils via un fichier JSON dans ton repo GitHub.
+        Tu dois faire la config une fois sur chaque appareil avec le même token.
+      </p>
+      <div class="setup-help" style="border-color:${ghStatus === "synced" ? "#10b981" : ghStatus === "error" ? "#ef4444" : "#94a3b8"}">
+        <strong>Statut :</strong> ${escapeHtml(ghStatusLabel)}
+        ${ghConfig ? `<br><strong>Repo :</strong> ${escapeHtml(ghConfig.owner)}/${escapeHtml(ghConfig.repo)} · <strong>Fichier :</strong> ${escapeHtml(ghConfig.path || GH_DEFAULT_PATH)}` : ""}
+        ${ghLastError ? `<br><span style="color:#ef4444;font-size:11px">${escapeHtml(ghLastError)}</span>` : ""}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${ghConfig
+          ? `<button class="btn btn-primary" onclick="pushNow()">Pousser maintenant</button>
+             <button class="btn btn-secondary" onclick="pullNow()">Récupérer du cloud</button>
+             <button class="btn btn-secondary" onclick="openSyncSetupModal()">Reconfigurer</button>
+             <button class="btn btn-secondary" style="color:#ef4444" onclick="if(confirm('Déconnecter GitHub ?')) { clearGhConfig(); render(); }">Déconnecter</button>`
+          : `<button class="btn btn-primary" onclick="openSyncSetupModal()">Configurer la sync GitHub</button>`}
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Sync manuelle (export / import)</div>
+      </div>
+      <p style="font-size:13px;color:#475569;margin-bottom:12px">
+        Alternative manuelle ou backup ponctuel : exporte un fichier JSON et importe-le sur l'autre appareil.
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="btn btn-primary" onclick="exportFile()">Exporter en fichier JSON</button>
+        <button class="btn btn-secondary" onclick="copyJson()">Copier les données</button>
+        <button class="btn btn-secondary" onclick="openImport()">Importer / Coller</button>
+      </div>
+      <p style="font-size:12px;color:#94a3b8;margin-top:8px">
+        Taille actuelle des données : ${(bytes/1024).toFixed(1)} Ko
+      </p>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Zone dangereuse</div>
+      </div>
+      <button class="btn btn-secondary" onclick="if(confirm('Effacer TOUT ?')) { localStorage.removeItem(STORAGE_KEY); state = JSON.parse(JSON.stringify(DEFAULT_STATE)); render(); }">Réinitialiser tout</button>
+    </div>
+  `;
+}
+
+// ================== FORM HELPERS ==================
+function toggleAddForm(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle("open");
+  if (el.classList.contains("open")) {
+    setTimeout(() => el.querySelector("input").focus(), 50);
+  }
+}
+function submitActive() {
+  const name = document.getElementById("active-name").value.trim();
+  const cat = document.getElementById("active-cat").value.trim();
+  const freq = document.getElementById("active-freq").value;
+  if (!name) { alert("Donne un nom à ta routine"); return; }
+  addActive({ name, category: cat, frequency: freq });
+}
+function submitWaiting() {
+  const name = document.getElementById("waiting-name").value.trim();
+  const cat = document.getElementById("waiting-cat").value.trim();
+  const note = document.getElementById("waiting-note").value.trim();
+  if (!name) { alert("Donne un nom à l'activité"); return; }
+  addWaiting({ name, category: cat, note });
+}
+function submitTodo() {
+  const name = document.getElementById("todo-name").value.trim();
+  const cat = document.getElementById("todo-cat").value.trim();
+  const due = document.getElementById("todo-due").value;
+  if (!name) { alert("Donne un nom à la tâche"); return; }
+  addTodo({ name, category: cat, dueDate: due });
+}
+function submitTodoToday() {
+  const name = document.getElementById("todo-today-name").value.trim();
+  const cat = document.getElementById("todo-today-cat").value.trim();
+  if (!name) { alert("Donne un nom à la tâche"); return; }
+  addTodo({ name, category: cat, dueDate: todayKey() });
+}
+function submitTodoNoDate() {
+  const name = document.getElementById("todo-nodate-name").value.trim();
+  const cat = document.getElementById("todo-nodate-cat").value.trim();
+  const due = document.getElementById("todo-nodate-due").value;
+  if (!name) { alert("Donne un nom à la tâche"); return; }
+  addTodo({ name, category: cat, dueDate: due });
+}
+function setDueToday(id) {
+  const t = state.todos.find(x => x.id === id);
+  if (!t) return;
+  t.dueDate = todayKey();
+  saveState();
+  render();
+}
+function clearDueDate(id) {
+  const t = state.todos.find(x => x.id === id);
+  if (!t) return;
+  t.dueDate = "";
+  saveState();
+  render();
+}
+function clearDoneTodos() {
+  if (!confirm("Effacer toutes les tâches faites ?")) return;
+  state.todos = state.todos.filter(t => !t.done);
+  saveState();
+  render();
+}
+
+// ================== MODAL ==================
+function openModal(html) {
+  document.getElementById("modal-content").innerHTML = html;
+  document.getElementById("modal-bg").classList.add("open");
+}
+function closeModal() {
+  document.getElementById("modal-bg").classList.remove("open");
+}
+function renderAddActiveForm({ name, category, onSave }) {
+  setTimeout(() => {
+    window._onSaveActive = onSave;
+  }, 0);
+  return `
+    <h3>Passer en routine active</h3>
+    <input type="text" id="m-name" value="${escapeAttr(name||"")}" placeholder="Nom" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <input type="text" id="m-cat" value="${escapeAttr(category||"")}" placeholder="Catégorie" style="width:100%;padding:9px;margin-bottom:8px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+    <select id="m-freq" style="width:100%;padding:9px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;font-family:inherit">
+      ${FREQUENCIES.map(f => `<option value="${f.id}">${f.label}</option>`).join("")}
+    </select>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="window._onSaveActive({ name: document.getElementById('m-name').value.trim(), category: document.getElementById('m-cat').value.trim(), frequency: document.getElementById('m-freq').value })">Confirmer</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+  `;
+}
+
+// ================== SYNC / EXPORT-IMPORT ==================
+function exportFile() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `mes-routines-${todayKey()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function copyJson() {
+  const txt = JSON.stringify(state);
+  navigator.clipboard.writeText(txt).then(
+    () => alert("Données copiées. Colle-les sur ton autre appareil via l'option Importer."),
+    () => alert("Copie échouée. Essaie l'export en fichier à la place.")
+  );
+}
+function openImport() {
+  openModal(`
+    <h3>Importer des données</h3>
+    <p style="font-size:13px;color:#64748b;margin-bottom:12px">
+      Colle ici le JSON copié depuis ton autre appareil, ou choisis un fichier exporté.
+    </p>
+    <textarea id="import-text" placeholder='{"active":[],"waiting":[],...}'></textarea>
+    <p style="font-size:12px;color:#94a3b8;margin:8px 0">— OU —</p>
+    <input type="file" id="import-file" accept=".json,application/json">
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="doImport()">Remplacer mes données</button>
+      <button class="btn btn-secondary" onclick="doImport(true)">Fusionner</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+    </div>
+    <p style="font-size:11px;color:#94a3b8;margin-top:10px">
+      "Remplacer" écrase tout. "Fusionner" garde tes données actuelles et ajoute celles importées (en évitant les doublons).
+    </p>
+  `);
+  document.getElementById("import-file").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { document.getElementById("import-text").value = r.result; };
+    r.readAsText(f);
+  });
+}
+function doImport(merge = false) {
+  const txt = document.getElementById("import-text").value.trim();
+  if (!txt) { alert("Aucune donnée à importer."); return; }
+  let imported;
+  try { imported = JSON.parse(txt); }
+  catch (e) { alert("JSON invalide : " + e.message); return; }
+  if (!imported || typeof imported !== "object") { alert("Format invalide."); return; }
+
+  if (merge) {
+    const seen = new Set(state.active.map(x => x.name));
+    (imported.active || []).forEach(x => { if (!seen.has(x.name)) state.active.push(x); });
+    const seenW = new Set(state.waiting.map(x => x.name));
+    (imported.waiting || []).forEach(x => { if (!seenW.has(x.name)) state.waiting.push(x); });
+    const seenT = new Set(state.todos.map(x => x.name));
+    (imported.todos || []).forEach(x => { if (!seenT.has(x.name)) state.todos.push(x); });
+    // Merge completions
+    Object.entries(imported.completions || {}).forEach(([k, v]) => {
+      state.completions[k] = { ...(state.completions[k] || {}), ...v };
+    });
+  } else {
+    state = { ...DEFAULT_STATE, ...imported };
+  }
+  saveState();
+  closeModal();
+  render();
+  alert("Import réussi.");
+}
+
+// ================== UTILS ==================
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[m]);
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// ================== INIT ==================
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    view = t.dataset.view;
+    render();
+  });
+});
+
+render();
+loadGhConfig();
+updateSyncIndicator();
+if (ghConfig) ghInitialLoad();
+</script>
+</body>
+</html>
