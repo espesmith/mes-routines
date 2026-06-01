@@ -220,7 +220,14 @@
         "createdAt": "2026-06-01T13:22:18.802Z"
       }
     ],
-    "pm": [],
+    "pm": [
+      {
+        "id": "y58slabnnk7k",
+        "name": "clean + toner + moiturizer",
+        "frequency": "daily",
+        "createdAt": "2026-06-01T13:22:36.176Z"
+      }
+    ],
     "body": []
   },
   "skinCompletions": {}
