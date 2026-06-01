@@ -106,7 +106,15 @@
       "2026-05-22": true
     }
   },
-  "weeklyPlan": {},
+  "weeklyPlan": {
+    "2026-06-12": [
+      {
+        "id": "e9stc2mzyccv",
+        "text": "sulac",
+        "done": false
+      }
+    ]
+  },
   "planTemplates": [],
   "hiddenCategories": [],
   "shopping": {
