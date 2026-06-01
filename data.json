@@ -142,6 +142,13 @@
         "text": "shopping",
         "done": false
       }
+    ],
+    "2026-06-03": [
+      {
+        "id": "7tg9gthk26dd",
+        "text": "potterie",
+        "done": false
+      }
     ]
   },
   "planTemplates": [],
