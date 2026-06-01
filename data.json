@@ -212,7 +212,14 @@
     ]
   },
   "skincare": {
-    "am": [],
+    "am": [
+      {
+        "id": "bw9wqyd1n6sy",
+        "name": "basic (clean + toner + moisturizer + SPF",
+        "frequency": "daily",
+        "createdAt": "2026-06-01T13:22:18.802Z"
+      }
+    ],
     "pm": [],
     "body": []
   },
