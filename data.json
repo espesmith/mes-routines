@@ -240,7 +240,14 @@
         "createdAt": "2026-06-01T13:23:07.597Z"
       }
     ],
-    "body": []
+    "body": [
+      {
+        "id": "5wl4w8z5zfhm",
+        "name": "adapalene",
+        "frequency": "2week",
+        "createdAt": "2026-06-01T13:31:49.930Z"
+      }
+    ]
   },
   "skinCompletions": {}
 }
