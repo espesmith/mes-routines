@@ -151,7 +151,13 @@
       }
     ]
   },
-  "planTemplates": [],
+  "planTemplates": [
+    {
+      "id": "bb11irea2yo2",
+      "name": "courses",
+      "color": "gray"
+    }
+  ],
   "hiddenCategories": [],
   "shopping": {
     "courses": [],
