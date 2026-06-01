@@ -128,6 +128,13 @@
         "text": "sulac",
         "done": false
       }
+    ],
+    "2026-06-01": [
+      {
+        "id": "ru3qzcxx1pe3",
+        "text": "courses",
+        "done": false
+      }
     ]
   },
   "planTemplates": [],
