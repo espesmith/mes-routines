@@ -1,5 +1,13 @@
 {
-  "active": [],
+  "active": [
+    {
+      "id": "odli6h6mp64d",
+      "name": "test3",
+      "category": "Bien-être",
+      "frequency": "daily",
+      "createdAt": "2026-06-01T08:15:55.453Z"
+    }
+  ],
   "waiting": [],
   "todos": [],
   "completions": {},
