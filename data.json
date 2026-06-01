@@ -232,6 +232,12 @@
         "name": "adapalene",
         "frequency": "2week",
         "createdAt": "2026-06-01T13:22:49.285Z"
+      },
+      {
+        "id": "fspgx686o8gd",
+        "name": "azelaic acid",
+        "frequency": "3week",
+        "createdAt": "2026-06-01T13:23:07.597Z"
       }
     ],
     "body": []
