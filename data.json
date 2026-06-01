@@ -6,11 +6,106 @@
       "category": "Bien-être",
       "frequency": "daily",
       "createdAt": "2026-06-01T08:15:55.453Z"
+    },
+    {
+      "id": "yt8l05rop8oc",
+      "name": "morining water",
+      "category": "mood",
+      "frequency": "daily",
+      "createdAt": "2026-05-21T19:23:26.892Z"
+    },
+    {
+      "id": "tyvi29pmrta7",
+      "name": "differin",
+      "category": "skin",
+      "frequency": "2week",
+      "createdAt": "2026-05-21T19:25:26.911Z"
+    },
+    {
+      "id": "ss4k8mgosfi8",
+      "name": "differin back",
+      "category": "skin",
+      "frequency": "2week",
+      "createdAt": "2026-05-21T19:25:55.712Z"
+    },
+    {
+      "id": "od45x9jcm2ta",
+      "name": "fasting",
+      "category": "santé",
+      "frequency": "3week",
+      "createdAt": "2026-05-21T21:40:57.406Z"
+    },
+    {
+      "id": "z1mcvhx0swvx",
+      "name": "Datacamp",
+      "category": "Brain",
+      "frequency": "5week",
+      "createdAt": "2026-05-22T07:06:08.637Z"
     }
   ],
-  "waiting": [],
-  "todos": [],
-  "completions": {},
+  "waiting": [
+    {
+      "id": "iimuvbterfg9",
+      "name": "arms",
+      "category": "sport",
+      "note": "",
+      "createdAt": "2026-05-21T19:25:08.985Z"
+    }
+  ],
+  "todos": [
+    {
+      "id": "dxbotqf1qzph",
+      "name": "cyanotype big picture",
+      "category": "art",
+      "dueDate": "",
+      "done": false,
+      "createdAt": "2026-05-21T19:24:48.581Z"
+    },
+    {
+      "id": "zo27tsv5l7l7",
+      "name": "vacume",
+      "category": "",
+      "dueDate": "2026-05-22",
+      "done": true,
+      "createdAt": "2026-05-21T21:40:16.939Z",
+      "doneAt": "2026-05-23T13:49:14.511Z"
+    },
+    {
+      "id": "8srazvx56jce",
+      "name": "pants (with ruffles?)",
+      "category": "Loisirs",
+      "dueDate": "",
+      "done": false,
+      "createdAt": "2026-06-01T07:33:26.510Z"
+    }
+  ],
+  "completions": {
+    "yt8l05rop8oc": {
+      "2026-05-21": true,
+      "2026-05-22": true,
+      "2026-05-23": true,
+      "2026-06-01": true
+    },
+    "ss4k8mgosfi8": {
+      "2026-05-21": true,
+      "2026-05-19": true,
+      "2026-06-01": true
+    },
+    "tyvi29pmrta7": {
+      "2026-05-21": true,
+      "2026-05-19": true
+    },
+    "od45x9jcm2ta": {
+      "2026-05-21": true,
+      "2026-05-20": true,
+      "2026-05-22": true
+    },
+    "z1mcvhx0swvx": {
+      "2026-05-20": true,
+      "2026-05-21": true,
+      "2026-05-22": true
+    }
+  },
   "weeklyPlan": {},
   "planTemplates": [],
   "hiddenCategories": [],
