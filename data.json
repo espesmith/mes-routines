@@ -154,6 +154,12 @@
         "id": "7tg9gthk26dd",
         "text": "potterie",
         "done": false
+      },
+      {
+        "id": "zayb6x4n3fcm",
+        "text": "courses",
+        "done": false,
+        "color": "pink"
       }
     ]
   },
