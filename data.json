@@ -226,6 +226,12 @@
         "name": "clean + toner + moiturizer",
         "frequency": "daily",
         "createdAt": "2026-06-01T13:22:36.176Z"
+      },
+      {
+        "id": "ijmlpwcfnubp",
+        "name": "adapalene",
+        "frequency": "2week",
+        "createdAt": "2026-06-01T13:22:49.285Z"
       }
     ],
     "body": []
