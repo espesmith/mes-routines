@@ -107,7 +107,14 @@
     }
   },
   "weeklyPlan": {
-    "2026-06-12": []
+    "2026-06-12": [],
+    "2026-06-05": [
+      {
+        "id": "rkvb9ce01aoq",
+        "text": "sulac",
+        "done": false
+      }
+    ]
   },
   "planTemplates": [],
   "hiddenCategories": [],
