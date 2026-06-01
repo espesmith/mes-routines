@@ -207,7 +207,13 @@
       {
         "id": "rl2",
         "title": "Weightloss",
-        "items": []
+        "items": [
+          {
+            "id": "wf983hwnkgce",
+            "text": "Psyllium husk",
+            "done": false
+          }
+        ]
       },
       {
         "id": "vknpnd8wka5b",
