@@ -1,0 +1,24 @@
+{
+  "active": [],
+  "waiting": [],
+  "todos": [],
+  "completions": {},
+  "weeklyPlan": {},
+  "planTemplates": [],
+  "hiddenCategories": [],
+  "shopping": {
+    "courses": [],
+    "rightLists": [
+      {
+        "id": "rl1",
+        "title": "Maison",
+        "items": []
+      },
+      {
+        "id": "rl2",
+        "title": "Art / loisirs",
+        "items": []
+      }
+    ]
+  }
+}
