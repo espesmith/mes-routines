@@ -68,7 +68,7 @@
       "dueDate": "2026-05-22",
       "done": true,
       "createdAt": "2026-05-21T21:40:16.939Z",
-      "doneAt": "2026-06-01T09:27:56.715Z"
+      "doneAt": "2026-05-23T13:49:14.511Z"
     },
     {
       "id": "8srazvx56jce",
@@ -131,6 +131,11 @@
     ],
     "2026-06-01": [
       {
+        "id": "ru3qzcxx1pe3",
+        "text": "courses",
+        "done": false
+      },
+      {
         "id": "b6r0kgw235bg",
         "text": "courses",
         "done": false,
@@ -171,7 +176,7 @@
     "rightLists": [
       {
         "id": "rl1",
-        "title": "Maison",
+        "title": "USA",
         "items": []
       },
       {
