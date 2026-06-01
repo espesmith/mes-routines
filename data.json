@@ -134,6 +134,12 @@
         "id": "ru3qzcxx1pe3",
         "text": "courses",
         "done": false
+      },
+      {
+        "id": "b6r0kgw235bg",
+        "text": "courses",
+        "done": false,
+        "color": "yellow"
       }
     ],
     "2026-06-02": [
