@@ -253,7 +253,13 @@
       {
         "id": "7zy0o7ofq91z",
         "title": "App / projects ideas",
-        "items": []
+        "items": [
+          {
+            "id": "p79rmmnq9krd",
+            "text": "Historic weather app",
+            "done": false
+          }
+        ]
       }
     ]
   },
